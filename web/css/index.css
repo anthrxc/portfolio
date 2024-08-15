@@ -1,0 +1,221 @@
+body {
+    background-color: #181818;
+    margin: 0;
+    overflow-x: hidden;
+    font-family: "Ubuntu", sans-serif;
+}
+
+.navbar {
+    position: relative;
+    margin: 0;
+    width: 100%;
+    background-color: #252525;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-family: "Ubuntu Mono", monospace;
+    font-weight: 700;
+    height: 60px;
+    z-index: 1000;
+    cursor: pointer;
+}
+
+.navbar-container {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    padding: 0 20px;
+    height: 100%;
+}
+
+.nav-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    text-align: center;
+}
+
+.nav-links li {
+    margin: 0 20px;
+}
+
+.nav-links a {
+    position: relative;
+    text-decoration: none;
+    font-size: 20px;
+    color: #cfcfcf;
+    transition: color 0.3s ease;
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -3.5px;
+    left: 50%;
+    background-color: #8844a8;
+    transform: translateX(-50%);
+    transition: width 0.3s ease;
+}
+
+.nav-links a:hover::after {
+    width: 100%;
+}
+
+.nav-links a:hover {
+    color: #8844a8;
+}
+
+.landing {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 60px);
+    position: relative;
+    padding-top: 10px;
+}
+
+.landing-content {
+    cursor: default;
+    text-align: center;
+    color: #cfcfcf;
+}
+
+.landing-content img {
+    height: 250px;
+}
+
+.landing-content h1 {
+    font-size: 45px;
+    margin-bottom: 0;
+}
+
+.landing-content h1 b {
+    filter: drop-shadow(0 0 0.2rem #cfcfcf);
+}
+
+.landing-content p {
+    margin-top: 0;
+    font-size: 17px;
+    font-style: italic;
+}
+
+.socials {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    cursor: pointer;
+}
+
+.socials img {
+    height: 40px;
+    margin: 0 7px;
+    filter: invert(100%) sepia(0%) saturate(1000%) hue-rotate(180deg) brightness(100%) contrast(100%);
+    transition: filter 0.3s ease-in-out;
+}
+
+.socials img:hover {
+    filter: invert(32%) sepia(68%) saturate(585%) hue-rotate(238deg) brightness(93%) contrast(94%);
+}
+
+.scroll {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    width: 100%;
+}
+
+.scroll p {
+    font-family: "Ubuntu", system-ui;
+    font-size: 20px;
+    font-weight: 700;
+    color: #cfcfcf;
+    margin-bottom: 0;
+    transition: color 0.3s ease;
+}
+
+.scroll-down {
+    cursor: pointer;
+    background: none;
+    border: none;
+    margin-top: 10px;
+    padding: 0;
+    outline: none;
+    transition: fill 0.3s ease, stroke 0.3s ease;
+}
+
+.scroll-down svg {
+    fill: #cfcfcf;
+    stroke: #cfcfcf;
+    stroke-width: 2;
+    transition: fill 0.3s ease, stroke 0.3s ease;
+}
+
+.scroll-down p {
+    margin-bottom: 0;
+}
+
+.scroll-down:hover p {
+    color: #8844a8;
+}
+
+.scroll-down:hover svg {
+    fill: #8844a8;
+    stroke: #8844a8;
+}
+
+.scroll-to-top {
+    font-family: "Ubuntu", system-ui;
+    font-weight: 700;
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    padding: 10px;
+    outline: none;
+    transition: fill 0.3s ease, stroke 0.3s ease;
+    cursor: pointer;
+}
+
+.scroll-to-top svg {
+    fill: #cfcfcf;
+    stroke: #cfcfcf;
+    stroke-width: 2;
+    transition: fill 0.3s ease, stroke 0.3s ease;
+}
+
+.scroll-to-top:hover svg {
+    fill: #8844a8;
+    stroke: #8844a8;
+}
+
+.scroll-to-top p {
+    color: #cfcfcf;
+    margin-top: 0;
+    transition: color 0.3s ease;
+}
+
+.scroll-to-top:hover p {
+    color: #8844a8;
+}
+
+#about {
+    height: 100vh;
+    background-image: -moz-linear-gradient(#000, #fff);
+    position: relative;
+}
+
+#projects {
+    height: 100vh;
+    background-image: -moz-linear-gradient(#ae0bc2, #cd123a);
+    position: relative;
+}
+
+#contact {
+    height: 100vh;
+    background-image: -moz-linear-gradient(#000, #fff);
+    position: relative;
+}
