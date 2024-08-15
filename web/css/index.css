@@ -219,3 +219,68 @@ body {
     background-image: -moz-linear-gradient(#000, #fff);
     position: relative;
 }
+
+footer {
+    background-color: #252525;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    color: #cfcfcf;
+    font-family: "Ubuntu", sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.footer-container {
+    width: 100%;
+    padding-top: 10px;
+    text-align: center;
+    background: none;
+}
+
+.footer-container img {
+    height: 85px;
+    margin: 0;
+}
+
+.footer-dono {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    text-decoration: none;
+    margin-bottom: 10px;
+}
+
+.payment-options {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+}
+
+.payment-options a {
+    display: block;
+    margin: 0 7px;
+}
+
+.payment-options img {
+    height: 40px;
+    border: none;
+    background: none;
+    filter: invert(100%) sepia(0%) saturate(1000%) hue-rotate(180deg) brightness(100%) contrast(100%);
+    transition: filter 0.3s ease-in-out;
+}
+
+.payment-options img:hover {
+    filter: invert(32%) sepia(68%) saturate(585%) hue-rotate(238deg) brightness(93%) contrast(94%);
+}
+
+.footer-copy {
+    cursor: default;
+    text-align: center;
+    color: #cfcfcf;
+    margin-top: 10px;
+}
