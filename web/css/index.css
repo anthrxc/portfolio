@@ -131,7 +131,6 @@ body {
     font-family: "Ubuntu", system-ui;
     font-size: 20px;
     font-weight: 700;
-    color: #cfcfcf;
     margin-bottom: 0;
     transition: color 0.3s ease;
 }
@@ -143,14 +142,15 @@ body {
     margin-top: 10px;
     padding: 0;
     outline: none;
-    transition: fill 0.3s ease, stroke 0.3s ease;
+    transition: filter 0.3s ease;
+    color: #ffffff;
 }
 
-.scroll-down svg {
-    fill: #cfcfcf;
-    stroke: #cfcfcf;
+.scroll-down img {
+    filter: invert(100%) sepia(0%) saturate(1000%) hue-rotate(180deg) brightness(100%) contrast(100%);
     stroke-width: 2;
-    transition: fill 0.3s ease, stroke 0.3s ease;
+    transition: filter 0.3s ease;
+    height: 24px;
 }
 
 .scroll-down p {
@@ -161,9 +161,8 @@ body {
     color: #8844a8;
 }
 
-.scroll-down:hover svg {
-    fill: #8844a8;
-    stroke: #8844a8;
+.scroll-down:hover img {
+    filter: invert(32%) sepia(68%) saturate(585%) hue-rotate(238deg) brightness(93%) contrast(94%);
 }
 
 .scroll-to-top {
@@ -176,24 +175,23 @@ body {
     border: none;
     padding: 10px;
     outline: none;
-    transition: fill 0.3s ease, stroke 0.3s ease;
+    transition: filter 0.3s ease;
     cursor: pointer;
 }
 
-.scroll-to-top svg {
-    fill: #cfcfcf;
-    stroke: #cfcfcf;
+.scroll-to-top img {
+    filter: invert(100%) sepia(0%) saturate(1000%) hue-rotate(180deg) brightness(100%) contrast(100%);
     stroke-width: 2;
-    transition: fill 0.3s ease, stroke 0.3s ease;
+    transition: filter 0.3s ease;
+    height: 24px;
 }
 
-.scroll-to-top:hover svg {
-    fill: #8844a8;
-    stroke: #8844a8;
+.scroll-to-top:hover img {
+    filter: invert(32%) sepia(68%) saturate(585%) hue-rotate(238deg) brightness(93%) contrast(94%);
 }
 
 .scroll-to-top p {
-    color: #cfcfcf;
+    color: #ffffff;
     margin-top: 0;
     transition: color 0.3s ease;
 }
@@ -203,19 +201,117 @@ body {
 }
 
 #about {
-    height: 100vh;
-    background-image: -moz-linear-gradient(#000, #fff);
+    min-height: 100vh;
+    background-color: #421264;
+    color: #cfcfcf;
     position: relative;
 }
 
+.about-title {
+    font-family: "Ubuntu Mono", monospace;
+    font-weight: 900;
+    font-size: 40px;
+    padding: 3% 10% 1%;
+    color: #ffffff;
+    text-decoration: solid underline #ffffff 6px;
+}
+
+.about-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0 13%;
+    margin-bottom: -1%;
+}
+
+.about-column-left {
+    flex: 1;
+}
+
+.about-me {
+    font-family: "Ubuntu", sans-serif;
+    font-weight: 300;
+    font-size: 18px;
+    padding: 0 0 13% 0;
+}
+
+.about-column-right {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.memoji {
+    border-radius: 50%;
+    filter: drop-shadow(0 0 1rem #cfcfcf);
+    max-width: 325px;
+    max-height: 325px;
+    margin-top: 7%;
+}
+
+.skills {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    cursor: default;
+}
+
+.skills img {
+    height: 55px;
+    margin: 0 20px;
+    filter: invert(100%) sepia(0%) saturate(1000%) hue-rotate(180deg) brightness(100%) contrast(100%);
+    transition: filter 0.3s ease-in-out;
+}
+
+.skills img:hover {
+    filter: invert(32%) sepia(68%) saturate(585%) hue-rotate(238deg) brightness(93%) contrast(94%);
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.tooltip .tooltiptext {
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 14px;
+    color: #fff;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    pointer-events: none;
+    display: none;
+    white-space: nowrap;
+}
+
+.tooltip:hover .tooltiptext {
+    display: block;
+    animation: fadeInUp 0.5s ease forwards;
+}
+
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, 10px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translate(-50%, 0px);
+    }
+}
+
 #projects {
-    height: 100vh;
+    min-height: 100vh;
     background-image: -moz-linear-gradient(#ae0bc2, #cd123a);
     position: relative;
 }
 
 #contact {
-    height: 100vh;
+    min-height: 100vh;
     background-image: -moz-linear-gradient(#000, #fff);
     position: relative;
 }
