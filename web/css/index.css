@@ -184,6 +184,13 @@ body {
     height: 1.5rem;
 }
 
+.scroll-to-top:nth-child(2) img {
+    /* filter: invert(100%) sepia(0%) saturate(1000%) hue-rotate(180deg) brightness(100%) contrast(100%); */
+    stroke-width: 2;
+    transition: filter 0.3s ease;
+    height: 1.5rem;
+}
+
 .scroll-to-top:hover img {
     filter: invert(32%) sepia(68%) saturate(585%) hue-rotate(238deg) brightness(93%) contrast(94%);
 }
@@ -310,9 +317,74 @@ body {
 }
 
 #projects {
-    min-height: 100vh;
-    background-image: -moz-linear-gradient(#ae0bc2, #cd123a);
+    background-color: #cfcfcf;
+    color: #000000;
     position: relative;
+    padding-bottom: 10vh;
+}
+
+.projects-title {
+    font-family: "Ubuntu Mono", monospace;
+    font-weight: 900;
+    font-size: 2.5rem;
+    padding: 3% 10% 1%;
+    text-decoration: solid underline #000000 6px;
+    margin-top: 0;
+}
+
+.project-card {
+    position: relative;
+    display: inline-block;
+    background-color: #dfdfdf;
+    height: 20rem;
+    width: 60rem;
+    border-radius: 20px;
+    box-shadow: inset 11px 11px 22px #bebebe, inset -11px -11px 22px #ffffff;
+    transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+    margin: 5rem auto;
+    transform-origin: center;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.project-card::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    box-shadow: 11px 11px 22px #bebebe, -6px -6px 12px #ffffff;
+    opacity: 0;
+    transition: opacity 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.project-card:hover {
+    transform: scale(1.02, 1.02);
+    box-shadow: none;
+}
+
+.project-card:hover::after {
+    opacity: 1;
+}
+
+.project-card .project-text {
+    flex: 1;
+    padding-left: 2rem;
+    justify-content: flex-start;
+    width: 50%;
+    margin: 1rem auto auto 2rem;
+}
+
+.project-image {
+    flex: 1;
+    max-width: 80%;
+    max-height: 80%;
+    object-fit: contain;
+    padding: 1rem;
+    border-radius: 10px;
 }
 
 #contact {
