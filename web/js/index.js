@@ -60,4 +60,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const scrollToTopButtons = document.querySelectorAll('.scroll-to-top');
     scrollToTopButtons.forEach(button => button.addEventListener('click', handleScrollToTopClick));
+
+    const myEmail = document.getElementById("myemail");
+    const emailTooltip = document.getElementById("email-tooltip");
+    myEmail.addEventListener("click", async function() {
+        try {
+            await navigator.clipboard.writeText("anthrxc34@gmail.com");
+            emailTooltip.classList.add('show');
+
+            setTimeout(() => {
+                emailTooltip.classList.remove('show');
+            }, 2000);
+        }
+        catch (e) {
+            console.log("Error:");
+        }
+    })
 });

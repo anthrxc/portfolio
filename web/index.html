@@ -6,6 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ivan R | Portfolio</title>
     <script src="js/index.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function () {
+            emailjs.init({
+                publicKey: "DdJjz6Bq5crg_ZTiC",
+            });
+        })();
+    </script>
     <link rel="icon" href="./assets/logo/logo.png">
     <link rel="stylesheet" href="./css/index.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -29,7 +37,7 @@
     <div class="landing">
         <div class="landing-content">
             <img src="assets/logo/logo.png">
-            <h1>Hi, I'm <b>Ivan</b>.</h1>
+            <h1>Hi, I'm <b>Ivan</b></h1>
             <p>a.k.a. anthrxc</p>
             <div class="socials">
                 <a href="https://www.github.com/anthrxc/" target="_blank"><img src="assets/social/github.svg"></a>
@@ -135,7 +143,6 @@
                     Bela+ is a program designed to track points in the game of Belote. I developed this program for two reasons:
                     to track points when playing the game with friends, and to submit it as my entry for a programming competition.
                     Although the competition outcome wasn't as I had hoped for reasons beyond my control, the program itself was great.
-                    Bela+ was developed in JavaScript using the 'enquirer' package and compiled into an executable with 'nexe'.
                 </p>
             </div>
             <img src="./assets/projects/bela+.png" alt="Project Image" class="project-image">
@@ -148,7 +155,6 @@
                     Passman CLI began as a hobby project to create my own password manager and introduced me to the 'enquirer' library, later used in Bela+.
                     Initially, it was an app to track assignments and classes for a friend, but I soon realized it could be adapted to track almost anything,
                     so I developed it into a password manager. Building this project was a fascinating learning experience, and I was proud of the final result.
-                    Although I attempted to develop a desktop app version, schoolwork eventually took priority, and the project was shelved.
                 </p>
             </div>
             <img src="./assets/projects/passman-cli.png" alt="Project Image" class="project-image">
@@ -197,7 +203,20 @@
     </section>
 
     <section id="contact">
+        <h1 class="contact-title">Let's talk!</h1>
 
+        <form action="https://formspree.io/f/xpwakrnq" method="POST" class="contact-form">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" required>
+        
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+        
+            <label for="message">Message</label>
+            <textarea id="message" name="message" rows="4" required></textarea>
+        
+            <button type="submit">Send Message</button>
+        </form>
 
         <button class="scroll-to-top" aria-label="Scroll to top">
             <img src="assets/misc/up.svg">
@@ -222,7 +241,11 @@
             </div>
 
             <div class="footer-copy">
-                <p>&copy; 2024. Ivan R.</p>
+                <p>
+                    &copy; 2024. Ivan R.<br>
+                    <span id="myemail">anthrxc34@gmail.com</span>
+                    <span id="email-tooltip">Copied!</span>
+                </p>
             </div>
         </div>
     </footer>
