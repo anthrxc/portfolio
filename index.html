@@ -7,21 +7,13 @@
     <meta name="description" content="A personal portfolio website for Ivan R. (anthrxc)">
     <title>Ivan R | Portfolio</title>
     <script src="js/index.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-    <script type="text/javascript">
-        (function () {
-            emailjs.init({
-                publicKey: "DdJjz6Bq5crg_ZTiC",
-            });
-        })();
-    </script>
-    <link rel="icon" href="./assets/logo/logo.png">
+    <link rel="icon" href="./assets/logo/logo.webp">
     <link rel="stylesheet" href="./css/index.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&family=Ubuntu+Sans+Mono:ital,wght@0,400..700;1,400..700&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap">
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap" rel="stylesheet">
+
 </head>
 
 <body>
@@ -37,7 +29,7 @@
 
     <div class="landing">
         <div class="landing-content">
-            <img src="assets/logo/logo.png" alt="IR logo">
+            <img src="assets/logo/logo.webp" alt="IR logo">
             <h1>Hi, I'm <b>Ivan</b></h1>
             <p>a.k.a. anthrxc</p>
             <div class="socials">
@@ -66,11 +58,11 @@
                         I always had an interest in creating something of my own and sharing it with the world, so programming was the perfect combination with my existing interest in technology.
                         My coding journey started around the time of COVID lockdown, when I couldn't do much apart from sit at home and cope with online school.<br><br>
                         Since then, I have turned many of my weird and (at least for me) interesting ideas into reality with JavaScript.
-                        Later, I started experimenting with website design and development which is also an interesting endeavour for me.
-                        Besides those, I am proficient in creating and maintaining SQL or MongoDB databases, so whatever it is that a project requires, I can assure you I am capable of it.<br><br>
-                        When I'm not working on any projects, you'll either find me in a gym, trying to get stronger, or behind a book, trying to escape the education system.<br>
+                        Later, I started experimenting with website design and development which is also a fascinating endeavour to me.
+                        Besides those, I am proficient in creating and maintaining MySQL or MongoDB databases, so whatever it is that a project requires, I can assure you I am capable of it.<br><br>
+                        When I'm not working on any projects, you'll either find me in a gym, or behind a good book.<br>
                         Other than those, I like to watch Formula 1 whenever it's a race weekend, or simracing when it isn't.<br><br>
-                        I'm available for hire! If you have a project in mind or just want to connect, feel free to drop me a message using the contact form at the bottom of the page.
+                        I'm always open for new projects and ideas, so if you have anything in mind, feel free to contact me below!
                     </p>
                 </div>
                 <div class="about-column-right">
@@ -114,11 +106,6 @@
                 </div>
             </div>
         </div>
-
-        <button class="scroll-to-top" aria-label="Scroll to top">
-            <img src="assets/misc/up.svg">
-            <p>Back to Top</p>
-        </button>
     </section>
 
     <section id="projects">
@@ -128,10 +115,9 @@
             <div class="project-text">
                 <h2>EuroFinance, Ltd.</h2>
                 <p>
-                    This website was created as part of a school project, where we were assigned to build a site based on various topics.
-                    Over the next few days, I invented a fictional bank and designed a website for it.
-                    The site included multiple pages introducing visitors to the bank, its services, and the fictional team behind it.
-                    My professor praised the website as the best in the class.
+                    As part of a school project, this is a pure-HTML website built for an imaginary bank.  
+                    Over a couple of days, I created a multi-page website detailing the bank, it's services and the team behind it.  
+                    As a result of my efforts, the website was praised as the best in class.  
                 </p>
             </div>
             <img src="./assets/projects/eurofinance.png" alt="EF landing page" class="project-image">
@@ -141,9 +127,10 @@
             <div class="project-text">
                 <h2>Bela+</h2>
                 <p>
-                    Bela+ is a program designed to track points in the game of Belote. I developed this program for two reasons:
-                    to track points when playing the game with friends, and to submit it as my entry for a programming competition.
-                    Although the competition outcome wasn't as I had hoped for reasons beyond my control, the program itself was great.
+                    Built with Node.js, Bela+ is a CLI program designed to track points in the card game Belote.
+                    Created with the idea to help out my friends when we'd play the game, and also to participate in a programming competition,  
+                    Bela+ was a great challenge in figuring out the logic in the points system of the game.
+                    Although the competition didn't go as planned, my friend group enjoyed the program.
                 </p>
             </div>
             <img src="./assets/projects/bela+.png" alt="Bela+ main menu" class="project-image">
@@ -153,54 +140,13 @@
             <div class="project-text">
                 <h2>Passman CLI</h2>
                 <p>
-                    Passman CLI began as a hobby project to create my own password manager and introduced me to the 'enquirer' library, later used in Bela+.
-                    Initially, it was an app to track assignments and classes for a friend, but I soon realized it could be adapted to track almost anything,
-                    so I developed it into a password manager. Building this project was a fascinating learning experience, and I was proud of the final result.
+                    What started as a learning experience for I/O in the command-line with Node.js, Passman soon turned into a passion project  
+                    to challenge myself in craeting a password manager. Although it is local-only, it was still a great experience in learning how to  
+                    communicate with the end user and store the provided information.
                 </p>
             </div>
             <img src="./assets/projects/passman-cli.png" alt="Passman main menu" class="project-image">
         </div>
-
-        <div class="project-card">
-            <div class="project-text">
-                <h2>Lott</h2>
-                <p>
-                    Lott was a JavaScript-based Discord bot where users could send cryptocurrency to enter a "lottery".
-                    The bot featured server-specific lotteries with weekly draws and a bot-wide lottery with monthly draws.
-                    Unfortunately, although the bot was fully developed, issues with the API handling cryptocurrency deposits prevented it from going live.
-                </p>
-            </div>
-            <img src="./assets/projects/lott.png" alt="Lott welcome message" class="project-image">
-        </div>
-
-        <div class="project-card">
-            <div class="project-text">
-                <h2>Oversight</h2>
-                <p>
-                    Oversight was a Discord bot developed to moderate and monitor activities on my old Discord server.
-                    It combined the features of a moderation bot, server logging tool, and ticketing system.
-                    This project was quite cool to me because allowed me to create a bot with all the necessary functions, without relying on the paywalled features often found in similar bots.
-                </p>
-            </div>
-            <img src="./assets/projects/oversight.png" alt="Oversight logo" class="project-image">
-        </div>
-
-        <div class="project-card">
-            <div class="project-text">
-                <h2>SineWave</h2>
-                <p>
-                    SineWave was a Discord bot inspired by the Rick Astley bot, which rickrolled a voice chat whenever someone @mentioned the
-                    bot. However, instead of playing "Never Gonna Give You Up", SineWave played a 6300 Hz sine wave tone for 30 seconds.
-                    It was a fun, short-lived project and an excellent one-day exercise to learn the basics of Discord's voice API.
-                </p>
-            </div>
-            <img src="./assets/projects/sinewave.png" alt="A literal sine wave" class="project-image">
-        </div>
-
-        <button class="scroll-to-top" aria-label="Scroll to top">
-            <img src="assets/misc/up.svg">
-            <p>Back to Top</p>
-        </button>
     </section>
 
     <section id="contact">
@@ -227,16 +173,16 @@
 
     <footer id="footer">
         <div class="footer-container">
-            <img src="./assets/logo/logo-white.png" alt="Logo">
+            <img src="./assets/logo/logo-white.webp" alt="Logo">
             
             <div class="footer-dono">
                 <h3>Feeling generous?</p>
                 <div class="payment-options">
-                    <a href="https://www.paypal.com" target="_blank">
+                    <a href="https://www.paypal.me/anthrxc" target="_blank">
                         <img src="./assets/donations/paypal.svg" alt="PayPal">
                     </a>
-                    <a href="https://www.kucoin.com" target="_blank">
-                        <img src="./assets/donations/bitcoin.svg" alt="Bitcoin">
+                    <a href="https://checkout.revolut.com/pay/c3fa1f25-8342-4d89-8463-ad3314968b15" target="_blank">
+                        <img src="./assets/donations/revolut.svg" alt="Revolut">
                     </a>
                 </div>
             </div>

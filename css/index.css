@@ -2,7 +2,7 @@ body {
     background-color: #181818;
     margin: 0;
     overflow-x: hidden;
-    font-family: "Ubuntu", sans-serif;
+    font-family: "Titillium Web", serif;
 }
 
 .navbar {
@@ -11,7 +11,7 @@ body {
     width: 100%;
     background-color: #252525;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    font-family: "Ubuntu Mono", monospace;
+    font-family: "Exo 2", serif;
     font-weight: 700;
     height: 3rem;
     z-index: 1000;
@@ -184,15 +184,8 @@ body {
     height: 1.5rem;
 }
 
-.scroll-to-top:nth-child(2) img {
-    /* filter: invert(100%) sepia(0%) saturate(1000%) hue-rotate(180deg) brightness(100%) contrast(100%); */
-    stroke-width: 2;
-    transition: filter 0.3s ease;
-    height: 1.5rem;
-}
-
 .scroll-to-top:hover img {
-    filter: invert(32%) sepia(68%) saturate(585%) hue-rotate(238deg) brightness(93%) contrast(94%);
+    filter: brightness(0) saturate(100%) invert(96%) sepia(44%) saturate(2473%) hue-rotate(309deg) brightness(109%) contrast(89%);
 }
 
 .scroll-to-top p {
@@ -202,7 +195,7 @@ body {
 }
 
 .scroll-to-top:hover p {
-    color: #8844a8;
+    color: #f1ca71;
 }
 
 #about {
@@ -426,8 +419,10 @@ body {
     border: 1px solid #cccccc;
     border-radius: 4px;
     box-sizing: border-box;
+    min-width: 100%;
     max-width: 100%;
     min-height: 2.5rem;
+    max-height: 50vh;
 }
 
 .contact-form button {
