@@ -1,6 +1,6 @@
 /* General Styles */
 body {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Titillium', sans-serif;
     background-color: #1E1E1E;
     color: #F5F5F5;
     text-align: center;
@@ -38,7 +38,7 @@ body {
 }
 
 .links a {
-    background: #2246B3;
+    background: #421264;
     color: white;
     text-decoration: none;
     padding: 10px;
@@ -47,5 +47,5 @@ body {
 }
 
 .links a:hover {
-    background: #1a3a8a;
+    background: #8844a8;
 }
