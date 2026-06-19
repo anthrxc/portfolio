@@ -4,185 +4,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="A personal portfolio website for Ivan R. (anthrxc)">
-    <title>Ivan R | Portfolio</title>
-    <script src="js/index.js"></script>
-    <link rel="icon" href="./assets/logo/logo.webp">
-    <link rel="stylesheet" href="./css/index.css">
+    <title>anthrxc — wip</title>
+    <meta name="description" content="anthrxc.is-a.dev — under reconstruction">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
 
 </head>
 
 <body>
-    <nav class="navbar">
-        <div class="navbar-container">
-            <ul class="nav-links">
-                <li><a href="#about">About</a></li>
-                <li><a href="#projects">Projects</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </div>
-    </nav>
+    <main class="stage" role="main">
 
-    <div class="landing">
-        <div class="landing-content">
-            <img src="assets/logo/logo.webp" alt="IR logo">
-            <h1>Hi, I'm <b>Ivan</b></h1>
-            <p>a.k.a. anthrxc</p>
-            <div class="socials">
-                <a href="https://www.github.com/anthrxc/" target="_blank"><img src="assets/social/github.svg"></a>
-                <a href="https://www.upwork.com/freelancers/~01f2d35e98b6493499" target="_blank"><img src="assets/social/upwork.svg"></a>
-            </div>
+        <svg src="wordmark.svg"></svg>
 
-        </div>
-        <div class="scroll">
-            <button class="scroll-down" aria-label="about">
-                <p>Let's get to know each other!</p>
-                <img src="assets/misc/down.svg">
-            </button>
-        </div>
-    </div>
-
-    <section id="about">
-        <h1 class="about-title">Who are you?</h1>
-        
-        <div class="about-content">
-            <div class="columns">
-                <div class="about-column-left">
-                    <p class="about-me">
-                        Thank you for asking!<br><br>
-                        I'm an 18-year-old freelance developer from Croatia.<br><br>
-                        I always had an interest in creating something of my own and sharing it with the world, so programming was the perfect combination with my existing interest in technology.
-                        My coding journey started around the time of COVID lockdown, when I couldn't do much apart from sit at home and cope with online school.<br><br>
-                        Since then, I have turned many of my weird and (at least for me) interesting ideas into reality with JavaScript.
-                        Later, I started experimenting with website design and development which is also a fascinating endeavour to me.
-                        Besides those, I am proficient in creating and maintaining MySQL or MongoDB databases, so whatever it is that a project requires, I can assure you I am capable of it.<br><br>
-                        When I'm not working on any projects, you'll either find me in a gym, or behind a good book.<br>
-                        Other than those, I like to watch Formula 1 whenever it's a race weekend, or simracing when it isn't.<br><br>
-                        I'm always open for new projects and ideas, so if you have anything in mind, feel free to contact me below!
-                    </p>
-                </div>
-                <div class="about-column-right">
-                    <img class="memoji" src="./assets/misc/memoji.png" alt="IR Memoji">
-                </div>
-            </div>
-            <div class="row">
-                <div class="skills">
-                    <div class="tooltip">
-                        <img src="./assets/skills/python.svg" alt="Python">
-                        <span class="tooltiptext">Uses more whitespace than a blank sheet of paper</span>
-                    </div>
-                    <div class="tooltip">
-                        <img src="./assets/skills/js.svg" alt="JavaScript">
-                        <span class="tooltiptext">Too many frameworks</span>
-                    </div>
-                    <div class="tooltip">
-                        <img src="./assets/skills/nodejs.svg" alt="node.js">
-                        <span class="tooltiptext">Runs fast, crashes faster</span>
-                    </div>
-                    <div class="tooltip">
-                        <img src="./assets/skills/html.svg" alt="HTML">
-                        <span class="tooltiptext">The best programming language</span>
-                    </div>
-                    <div class="tooltip">
-                        <img src="./assets/skills/css.svg" alt="CSS">
-                        <span class="tooltiptext">How to center a div?</span>
-                    </div>
-                    <div class="tooltip">
-                        <img src="./assets/skills/mysql.svg" alt="MySQL">
-                        <span class="tooltiptext">DROP DATABASE life</span>
-                    </div>
-                    <div class="tooltip">
-                        <img src="./assets/skills/mongodb.svg" alt="MongoDB">
-                        <span class="tooltiptext">Data consistency? Cute.</span>
-                    </div>
-                    <div class="tooltip">
-                        <img src="./assets/skills/photoshop.svg" alt="Photoshop">
-                        <span class="tooltiptext">Too many layers, not enough RAM</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="projects">
-        <h1 class="projects-title">What can you show me?</h1>
-
-        <div class="project-card">
-            <div class="project-text">
-                <h2>EuroFinance, Ltd.</h2>
-                <p>
-                    As part of a school project, this is a pure-HTML website built for an imaginary bank.  
-                    Over a couple of days, I created a multi-page website detailing the bank, it's services and the team behind it.  
-                    As a result of my efforts, the website was praised as the best in class.  
-                </p>
-            </div>
-            <img src="./assets/projects/eurofinance.png" alt="EF landing page" class="project-image">
+        <div class="term">
+            <span class="path">anthrxc@web</span><span class="prompt">:~$</span>
+            <span class="typed" id="typed"></span><span class="cursor" aria-hidden="true"></span>
+            <span class="out" id="out" hidden>// <span class="ok">status:</span> under construction &middot; coming soon to a repo near you</span>
         </div>
 
-        <div class="project-card">
-            <div class="project-text">
-                <h2>Bela+</h2>
-                <p>
-                    Built with Node.js, Bela+ is a CLI program designed to track points in the card game Belote.
-                    Created with the idea to help out my friends when we'd play the game, and also to participate in a programming competition,  
-                    Bela+ was a great challenge in figuring out the logic in the points system of the game.
-                    Although the competition didn't go as planned, my friend group enjoyed the program.
-                </p>
-            </div>
-            <img src="./assets/projects/bela+.png" alt="Bela+ main menu" class="project-image">
-        </div>
+        <nav class="foot">
+            <a href="https://github.com/anthrxc" target="_blank" rel="noopener">github</a>
+            <span class="dot">/</span>
+            <a href="https://ko-fi.com/anthrxc" target="_blank" rel="noopener">ko-fi</a>
+        </nav>
 
-        <div class="project-card">
-            <div class="project-text">
-                <h2>Passman CLI</h2>
-                <p>
-                    What started as a learning experience for I/O in the command-line with Node.js, Passman soon turned into a passion project  
-                    to challenge myself in craeting a password manager. Although it is local-only, it was still a great experience in learning how to  
-                    communicate with the end user and store the provided information.
-                </p>
-            </div>
-            <img src="./assets/projects/passman-cli.png" alt="Passman main menu" class="project-image">
-        </div>
-    </section>
-
-    <section id="contact">
-        <h1 class="contact-title">Let's talk!</h1>
-
-        <form action="https://formspree.io/f/xpwakrnq" method="POST" class="contact-form">
-            <label for="name">Name</label>
-            <input type="text" id="name" name="name" required>
-        
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" required>
-        
-            <label for="message">Message</label>
-            <textarea id="message" name="message" rows="4" required></textarea>
-        
-            <button type="submit">Send Message</button>
-        </form>
-
-        <button class="scroll-to-top" aria-label="Scroll to top">
-            <img src="assets/misc/up.svg">
-            <p>Back to Top</p>
-        </button>
-    </section>
-
-    <footer id="footer">
-        <div class="footer-container">
-            <img src="./assets/logo/logo-white.webp" alt="Logo">
-            
-            <div class="footer-copy">
-                <p>
-                    &copy; <span id="year"></span> Ivan R.<br>
-                    <span id="myemail">anthrxc34@gmail.com</span>
-                    <span id="email-tooltip">Copied!</span>
-                </p>
-            </div>
-        </div>
-    </footer>
+    </main>
 </body>
 </html>
