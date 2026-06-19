@@ -1,7 +1,6 @@
 # Portfolio Website
 
-This is a redesign of my personal portfolio website, with some improved design and updated bio, projects list and a proper contact form.  
-Inspiration (if you stretch the definition far enough) from my [old website](https://github.com/anthrxc/personal-website) and [Riccardo Zanutta](https://riccardozanutta.com/).
+My portfolio website - with a redesign coming soon to a repo near you.  
 
 ## MIT License
 
