@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Vitrina Vina</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lora:wght@400;500&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  min-height: 100vh;
+  background: #1c0910;
+  font-family: 'Lora', Georgia, serif;
+  color: #f5e6c8;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px 16px 48px;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.wrap { width: 100%; max-width: 460px; }
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 20px;
+  color: #dbb86a;
+  letter-spacing: 0.5px;
+}
+
+.btn-shuffle {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(219,184,106,0.3);
+  color: #dbb86a;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  cursor: pointer;
+  font-family: 'Lora', serif;
+}
+
+.filters {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.filter-btn {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(245,230,200,0.5);
+  padding: 5px 11px;
+  border-radius: 20px;
+  font-size: 12px;
+  cursor: pointer;
+  font-family: 'Lora', serif;
+}
+
+.filter-btn.active {
+  background: rgba(219,184,106,0.18);
+  border-color: rgba(219,184,106,0.6);
+  color: #dbb86a;
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: rgba(245,230,200,0.45);
+  margin-bottom: 4px;
+}
+
+.prog-known { color: #60d880 !important; }
+
+.progress-bar {
+  background: rgba(255,255,255,0.08);
+  border-radius: 3px;
+  height: 3px;
+  margin-bottom: 14px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #8a2040, #dbb86a);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+  width: 0%;
+}
+
+/* CARD 3D */
+.card-wrap {
+  perspective: 1200px;
+  cursor: pointer;
+  margin-bottom: 18px;
+  width: 100%;
+  height: 340px;
+}
+
+.card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-inner.flipped {
+  transform: rotateY(180deg);
+}
+
+.card-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 20px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+  padding: 28px;
+  overflow: hidden;
+}
+
+.card-front {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-back {
+  transform: rotateY(180deg);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow-y: auto;
+}
+
+/* BIJELA */
+.cat-bijela { background: #f5e6c0; }
+.cat-bijela .badge { background: #e8c840; color: #4a3000; }
+.cat-bijela .card-naziv { color: #2a1800; }
+.cat-bijela .card-hint { color: #8a6010; }
+.cat-bijela .fl { color: #8a6010; }
+.cat-bijela .fv { color: #2a1800; }
+.cat-bijela .div-line { border-top: 1px solid rgba(138,96,16,0.25); }
+
+/* ROSÉ */
+.cat-rose { background: #fde0e0; }
+.cat-rose .badge { background: #f7b0b8; color: #5c1020; }
+.cat-rose .card-naziv { color: #2a0810; }
+.cat-rose .card-hint { color: #b03040; }
+.cat-rose .fl { color: #b03040; }
+.cat-rose .fv { color: #2a0810; }
+.cat-rose .div-line { border-top: 1px solid rgba(176,48,64,0.25); }
+
+/* CRNA */
+.cat-crna { background: #ede0e4; }
+.cat-crna .badge { background: #c07080; color: #380010; }
+.cat-crna .card-naziv { color: #1a0810; }
+.cat-crna .card-hint { color: #6a1830; }
+.cat-crna .fl { color: #6a1830; }
+.cat-crna .fv { color: #1a0810; }
+.cat-crna .div-line { border-top: 1px solid rgba(106,24,48,0.25); }
+
+/* ULJE */
+.cat-ulje { background: #e0f0d0; }
+.cat-ulje .badge { background: #a0d070; color: #163800; }
+.cat-ulje .card-naziv { color: #0e2400; }
+.cat-ulje .card-hint { color: #3a7010; }
+.cat-ulje .fl { color: #3a7010; }
+.cat-ulje .fv { color: #0e2400; }
+.cat-ulje .div-line { border-top: 1px solid rgba(58,112,16,0.25); }
+
+.badge {
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  margin-bottom: 22px;
+  display: inline-block;
+}
+
+.card-naziv {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 26px;
+  font-weight: 700;
+  text-align: center;
+  line-height: 1.3;
+}
+
+.card-hint {
+  font-size: 12px;
+  opacity: 0.6;
+  margin-top: 18px;
+}
+
+.field { margin-bottom: 14px; }
+
+.fl {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1.8px;
+  margin-bottom: 3px;
+}
+
+.fv {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.field-opis { padding-top: 14px; margin-bottom: 0; }
+.field-opis .fv {
+  font-family: 'Lora', serif;
+  font-size: 12.5px;
+  font-weight: 400;
+  opacity: 0.85;
+  line-height: 1.65;
+}
+
+/* ACTION BUTTONS */
+.btns {
+  display: none;
+  gap: 14px;
+  width: 100%;
+}
+
+.btn-ne, .btn-da {
+  flex: 1;
+  padding: 13px;
+  border-radius: 14px;
+  font-size: 14px;
+  cursor: pointer;
+  font-family: 'Lora', serif;
+  border: 1px solid;
+}
+
+.btn-ne {
+  background: rgba(200,50,50,0.13);
+  border-color: rgba(200,80,80,0.4);
+  color: #f08080;
+}
+
+.btn-da {
+  background: rgba(50,180,70,0.13);
+  border-color: rgba(70,180,80,0.4);
+  color: #70e090;
+}
+
+.hint-tap {
+  color: rgba(245,230,200,0.3);
+  font-size: 12px;
+  margin-top: 4px;
+  text-align: center;
+}
+
+/* RESULTS */
+#results {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 24px;
+  text-align: center;
+  width: 100%;
+}
+#results.show { display: flex; }
+
+.res-emoji { font-size: 64px; margin-bottom: 12px; }
+
+.res-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 30px;
+  color: #dbb86a;
+  margin-bottom: 6px;
+}
+
+.res-sub {
+  color: rgba(245,230,200,0.5);
+  font-size: 14px;
+  margin-bottom: 28px;
+}
+
+.res-box {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(219,184,106,0.2);
+  border-radius: 18px;
+  padding: 28px 36px;
+  max-width: 300px;
+  width: 100%;
+  margin-bottom: 24px;
+}
+
+.res-pct {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 52px;
+  color: #dbb86a;
+}
+
+.res-pct-label {
+  color: rgba(245,230,200,0.45);
+  font-size: 13px;
+  margin-bottom: 20px;
+}
+
+.res-counts { display: flex; justify-content: space-around; }
+.res-count-num { font-size: 26px; }
+.res-count-label { font-size: 12px; color: rgba(245,230,200,0.45); }
+
+.btn-restart {
+  background: linear-gradient(135deg, #8a2040, #5a1025);
+  color: #f5e6c8;
+  border: none;
+  padding: 13px 36px;
+  border-radius: 50px;
+  font-size: 15px;
+  font-family: 'Lora', serif;
+  cursor: pointer;
+}
+</style>
+</head>
+<body>
+
+<div id="app" class="wrap">
+  <div class="header">
+    <div class="title">🍷 Vitrina Vina</div>
+    <button class="btn-shuffle" onclick="doShuffle()">🔀 Mješaj</button>
+  </div>
+  <div class="filters" id="filters"></div>
+  <div class="progress-info">
+    <span id="prog-idx">1 / 58</span>
+    <span class="prog-known" id="prog-known">✓ 0</span>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="prog-fill"></div></div>
+
+  <div class="card-wrap" onclick="flipCard()">
+    <div class="card-inner" id="card-inner">
+      <div class="card-face card-front" id="card-front"></div>
+      <div class="card-face card-back" id="card-back"></div>
+    </div>
+  </div>
+
+  <div class="btns" id="btns">
+    <button class="btn-ne" onclick="event.stopPropagation(); mark(false)">✗ Ne znam</button>
+    <button class="btn-da" onclick="event.stopPropagation(); mark(true)">✓ Znam</button>
+  </div>
+  <div class="hint-tap" id="hint-tap">tapni karticu da vidiš odgovor</div>
+</div>
+
+<div id="results">
+  <div class="res-emoji" id="res-emoji">🏆</div>
+  <div class="res-title" id="res-title">Bravo!</div>
+  <div class="res-sub">Završio si sesiju učenja</div>
+  <div class="res-box">
+    <div class="res-pct" id="res-pct">0%</div>
+    <div class="res-pct-label">točnih odgovora</div>
+    <div class="res-counts">
+      <div>
+        <div class="res-count-num" style="color:#60d880" id="res-known">✓ 0</div>
+        <div class="res-count-label">Znam</div>
+      </div>
+      <div>
+        <div class="res-count-num" style="color:#e06060" id="res-unknown">✗ 0</div>
+        <div class="res-count-label">Ne znam</div>
+      </div>
+    </div>
+  </div>
+  <button class="btn-restart" onclick="doShuffle()">Ponovi od početka</button>
+</div>
+
+<script>
+const ALL = [
+  {id:1,naziv:"Stina Bol",sorta:"Vugava",podrijetlo:"Brač",boja:"bijela",opis:"Izražene note zrelog tropskog voća, meda i cvjetnih tonova; blaga svježina balansira alkohol."},
+  {id:2,naziv:"Hvar Hills",sorta:"Bogdanuša",podrijetlo:"Hvar",boja:"bijela",opis:"Autohtona hvarska sorta — svježe i elegantno, lepršave cvjetne arome i nježne mineralne note."},
+  {id:3,naziv:"Radovan",sorta:"Malvazija Istarska",podrijetlo:"Istra",boja:"bijela",opis:"Kristalno čista klasična malvazija; miris bagremova cvijeta, citrusa i ugodna mineralnost."},
+  {id:4,naziv:"Testament",sorta:"Pošip",podrijetlo:"Dalmacija (Šibenik)",boja:"bijela",opis:"Moderno balansiran pošip; arome breskve i mediteranskog bilja, dugotrajni završetak."},
+  {id:5,naziv:"Krajančić Intrada",sorta:"Pošip",podrijetlo:"Dalmacija (Korčula)",boja:"bijela",opis:"Kultni korčulanski pošip, bogat i strukturni; arome zrelog južnog voća, badema i elegantne mineralnosti."},
+  {id:6,naziv:"Plančić Ager (Pošip)",sorta:"Pošip",podrijetlo:"Hvar",boja:"bijela",opis:"Izvrsno strukturirano bijelo vino s hvarskih položaja; intenzivne voćne arome i fina kiselina."},
+  {id:7,naziv:"Senjković Sentiment",sorta:"Pošip",podrijetlo:"Brač",boja:"bijela",opis:"Profinjen i elegantan pošip s Brača; svježina citrusa s punijim tijelom i dugim harmoničnim završetkom."},
+  {id:8,naziv:"Merga Victa",sorta:"Pošip",podrijetlo:"Dalmacija (Korčula)",boja:"bijela",opis:"Suho, svježe i vibrantno vino iz Korčule; note zelenog jabuka, citrusa i otočke mineralnosti."},
+  {id:9,naziv:"Bastian",sorta:"Malvazija Istarska",podrijetlo:"Istra",boja:"bijela",opis:"Suvremena interpretacija istarske malvazije; čista voćnost, cvjetni tonovi i uravnotežena svježina."},
+  {id:10,naziv:"Senjković Tristeca",sorta:"Pošip",podrijetlo:"Brač",boja:"bijela",opis:"Elegantno i svježe bračko bijelo; nježne voćne i floralne arome, lijepo balansirani okus."},
+  {id:11,naziv:"Krajančić Statut 1214",sorta:"Pošip",podrijetlo:"Dalmacija (Korčula)",boja:"bijela",opis:"Premium pošip bogate teksture; savršen spoj tradicije, zrelog voća i nježnih začinskih nota."},
+  {id:12,naziv:"Plančić Ager Cuvée",sorta:"Cuvée (bijela kupaža)",podrijetlo:"Hvar",boja:"bijela",opis:"Bogata i kompleksna bijela kupaža; zaokružen okus, izražena mineralnost i arome zrelog voća."},
+  {id:13,naziv:"Plančić Moderna Optimus",sorta:"Pošip, Vugava, Bogdanuša, Parč",podrijetlo:"Hvar",boja:"bijela",opis:"Jedinstvena kupaža autohtonih hvarskih sorti; harmonična i slojevita, predivan balans svježine i voćnosti."},
+  {id:14,naziv:"Hvar Hills Surreal",sorta:"Pošip",podrijetlo:"Hvar",boja:"bijela",opis:"Slojevit i moćan hvarski pošip; puno tijelo, bogato zrelo žuto voće, suptilni začini i duga završnica."},
+  {id:15,naziv:"Bire",sorta:"Grk",podrijetlo:"Korčula",boja:"bijela",opis:"Iznimno rijetko autohtono vino s Korčule; raskošno tijelo, arome zrelog voća, badema i mineralnosti."},
+  {id:16,naziv:"Stina Bol Pošip Majstor",sorta:"Pošip",podrijetlo:"Brač",boja:"bijela",opis:"Vrhunski odležani pošip; kompleksan, note vanilije, tosta i zrelog tropskog voća."},
+  {id:17,naziv:"Clai Ottocento Bijeli",sorta:"Malvazija, Sivi Pinot, Chardonnay, Sauv. Bijeli",podrijetlo:"Istra",boja:"bijela",opis:"Izvrsna macerirana bijela kupaža; note suhog voća, orašastih plodova i zrele mineralnosti."},
+  {id:18,naziv:"Clai Sv. Jakov",sorta:"Malvazija (macerirana)",podrijetlo:"Istra",boja:"bijela",opis:"Organska i macerirana malvazija; impresivna struktura, duboka zlatna boja, arome suhog bilja i meda."},
+  {id:19,naziv:"Kutjevo Sontacchi",sorta:"Graševina",podrijetlo:"Slavonija",boja:"bijela",opis:"Vrhunska slavonska graševina; svježa i pitka, arome zelene jabuke, citrusa i fina plemenita gorčina."},
+  {id:20,naziv:"Bura-Mrgudić",sorta:"Bura Rukatac",podrijetlo:"Pelješac",boja:"bijela",opis:"Autohtoni rukatac s Pelješca; svjež i mineralan, izražene arome citrusa, mediteranskog bilja i živahne kiseline."},
+  {id:21,naziv:"Plančić Ager Bogdanuša",sorta:"Bogdanuša",podrijetlo:"Hvar",boja:"bijela",opis:"Izvrsna prezentacija hvarske bogdanuše; lagano tijelo, lepršave cvjetne note i osvježavajući karakter."},
+  {id:22,naziv:"Senjković Spoža",sorta:"Rosé",podrijetlo:"Brač",boja:"rose",opis:"Izuzetno elegantan i svjež brački rosé; nježne arome svježih jagoda, malina i ugodna kiselina."},
+  {id:23,naziv:"Hvar Hills Rosé Pius",sorta:"Rosé",podrijetlo:"Hvar",boja:"rose",opis:"Profinjen i pitak hvarski rosé; diskretne arome crvenog bobičastog voća, izvrsno balansiran završetak."},
+  {id:24,naziv:"Plančić Pharos Roza",sorta:"Rosé",podrijetlo:"Hvar",boja:"rose",opis:"Lagan, svjež i harmoničan ljetni rosé; živahne kiseline i voćni miris na svježe ubrane maline."},
+  {id:25,naziv:"Plančić Moderna Superbus",sorta:"Plavac Mali, Darnekuša, Cab. Sauv., Merlot",podrijetlo:"Hvar",boja:"crna",opis:"Moćna i slojevita crna kupaža; bogato tijelo, arome tamnog bobičastog voća, začina i zreli tanini."},
+  {id:26,naziv:"Miloš Plavac",sorta:"Plavac Mali",podrijetlo:"Dalmacija",boja:"crna",opis:"Klasičan, bogat i snažan plavac mali; note suhih šljiva, rogača, tamne čokolade i mediteranskog makije."},
+  {id:27,naziv:"Senjković Bjondina",sorta:"Plavina",podrijetlo:"Brač",boja:"crna",opis:"Elegantno crno od plavine; lakše tijelo, izuzetna pitkost, arome crvenog voća i blagi začinski tonovi."},
+  {id:28,naziv:"Bire Plavac Mali",sorta:"Plavac Mali",podrijetlo:"Korčula",boja:"crna",opis:"Snažan i punokrvan otočki plavac; bogat zrelim taninima, arome tamnog voća, suhih smokava i začina."},
+  {id:29,naziv:"Terra Spino Vrh",sorta:"Cuvée (crna kupaža)",podrijetlo:"Dalmacija",boja:"crna",opis:"Karakterna dalmatinska kupaža; puno tijelo, arome zrelog crnog voća, začina i blagih nota hrasta."},
+  {id:30,naziv:"Matuško Dingač",sorta:"Plavac Mali",podrijetlo:"Pelješac",boja:"crna",opis:"Vrhunski, gust i moćan dingač; arome suhog voća, višnje maraske, slatkih začina i hrastovih bačvi."},
+  {id:31,naziv:"Skaramuča Crljenak",sorta:"Plavac Mali",podrijetlo:"Pelješac",boja:"crna",opis:"Elegantna verzija pelješkog dingača; izvrsno balansirano tijelo, uglađeni tanini i dug završetak."},
+  {id:32,naziv:"Vina Matelja Crljenak Kaštelanski",sorta:"Crljenak Kaštelanski",podrijetlo:"Dalmacija",boja:"crna",opis:"Autentičan crljenak; tople arome borovnica, kupina i nježnih nota vanilije, mekani ugodni tanini."},
+  {id:33,naziv:"Benmosche Zinfadel",sorta:"Plavac Mali",podrijetlo:"Dalmacija",boja:"crna",opis:"Raskošan i moćan plavac; duboka rubinska boja, strukturirane arome suhog bobičastog voća i začina."},
+  {id:34,naziv:"Senjković Bročko Rič",sorta:"Plavac Mali",podrijetlo:"Brač",boja:"crna",opis:"Izvrsno izbalansiran brački plavac; moderni stil, arome crnog voća, kave i tamne čokolade."},
+  {id:35,naziv:"Senjković Bosso",sorta:"Plavac Mali",podrijetlo:"Brač",boja:"crna",opis:"Voćan, pitak i iznimno ugodan plavac mali; naglašene note svježeg crvenog voća i blagi mekani tanini."},
+  {id:36,naziv:"Grgić",sorta:"Plavac Mali",podrijetlo:"Pelješac",boja:"crna",opis:"Vrhunski plavac svjetske klase; izuzetno elegantan, kompleksne arome plavog voća, kože, duhana i drva."},
+  {id:37,naziv:"Benmosche Dingač",sorta:"Plavac Mali",podrijetlo:"Pelješac",boja:"crna",opis:"Moćno, duboko i toplo pelješko vino; zreli tanini, arome suhih šljiva, slatkih začina i vanilije."},
+  {id:38,naziv:"Hvar Hills Merlot",sorta:"Merlot",podrijetlo:"Hvar",boja:"crna",opis:"Izvrsno strukturiran i baršunast merlot s Hvara; tople arome šljiva, tamne čokolade i fine hrastovine."},
+  {id:39,naziv:"Hvar Hills Syrah",sorta:"Syrah",podrijetlo:"Hvar",boja:"crna",opis:"Elegantni hvarski syrah; bogat aromama kupine, borovnice i papra, srednje do puno tijelo s dugim začinskim završetkom."},
+  {id:40,naziv:"Stina",sorta:"Plavac Mali",podrijetlo:"Brač",boja:"crna",opis:"Klasičan brački plavac; robusni ali ugodni tanini, arome tamnog voća i mediteranskog bilja."},
+  {id:41,naziv:"Matuško Dingač Reserva",sorta:"Plavac Mali",podrijetlo:"Pelješac",boja:"crna",opis:"Dugo odležavana selekcija dingača; ekstremno bogata, guste arome džema od šljiva, likera od višanja i kože."},
+  {id:42,naziv:"Plančić Pharos Grand Cru",sorta:"Plavac Mali i Darnekuša",podrijetlo:"Hvar",boja:"crna",opis:"Premium hvarska kupaža; vrhunska struktura i kompleksnost, note tamnog voća, crnog papra i elegantnog drva."},
+  {id:43,naziv:"Hvar Hills Pharos Maximvs",sorta:"Plavac Mali",podrijetlo:"Hvar",boja:"crna",opis:"Moćan, monumentalan i bogat plavac mali s hvarskih strmina; arome tamnog bobičastog voća i začina."},
+  {id:44,naziv:"Zlatan Otok Plavac Grand Select",sorta:"Plavac Mali",podrijetlo:"Hvar",boja:"crna",opis:"Selekcija vrhunskog plavca s južnih padina Hvara; savršen balans snage i elegancije, arome suhog voća i rogača."},
+  {id:45,naziv:"Boškinac",sorta:"Cuvée (Cab. Sauv. i Merlot)",podrijetlo:"Pag",boja:"crna",opis:"Jedno od najboljih hrvatskih crnih vina; kompleksna kupaža s Paga, arome minerala, zemlje i tamnog voća."},
+  {id:46,naziv:"Crna Ovca Dingač",sorta:"Plavac Mali",podrijetlo:"Pelješac",boja:"crna",opis:"Snažan i koncentriran dingač; bogati tanini i intenzivne arome suhih šljiva, višanja, začina i tamne čokolade."},
+  {id:47,naziv:"Matuško Royal Dingač",sorta:"Plavac Mali",podrijetlo:"Pelješac",boja:"crna",opis:"Arhivski dragulj, sam vrh pelješkog vinarstva; ekstremno bogat, arome suhih smokava, čokolade, kave i drva."},
+  {id:48,naziv:"Senjković Dita",sorta:"Syrah, Cabernet Sauvignon i Plavac Mali",podrijetlo:"Brač",boja:"crna",opis:"Vrhunska crna kupaža s Brača; savršeno izbalansirana, slojevite arome zrelog crnog voća i svilenkastih tanina."},
+  {id:49,naziv:"Bura Dingač",sorta:"Plavac Mali",podrijetlo:"Pelješac",boja:"crna",opis:"Moćan, tradicionalan i neukroćen dingač; izrazito puno tijelo, arome suhih šljiva, dima, zemlje i toplih začina."},
+  {id:50,naziv:"Stagnum (Miloš)",sorta:"Plavac Mali",podrijetlo:"Pelješac",boja:"crna",opis:"Kultni dugovječni plavac mali; iznimna elegancija i duboka kompleksnost, arome suhog bilja, zemlje i suhog voća."},
+  {id:51,naziv:"Duboković Medvid",sorta:"Plavac Mali",podrijetlo:"Hvar",boja:"crna",opis:"Jedan od najekskluzivnijih hvarskih plavaca; izrazito gust, arome likera, dima i tamnog voća."},
+  {id:52,naziv:"Zlatan Plavac Exclusive",sorta:"Plavac Mali",podrijetlo:"Hvar",boja:"crna",opis:"Ekskluzivna serija vrhunskog plavca; vrhunac elegancije i snage s Hvara, baršunasti tanini i dug završetak."},
+  {id:53,naziv:"Stina Plavac Mali Remek Djelo",sorta:"Plavac Mali",podrijetlo:"Brač",boja:"crna",opis:"Kultni brački plavac iznimne elegancije; raskošne arome zrelog tamnog voća, suhih šljiva, mediteranskog bilja i plemenitog drva."},
+  {id:54,naziv:"OLBOL",sorta:"Ekstra djevičansko maslinovo ulje",podrijetlo:"Brač",boja:"ulje",opis:"Vrhunsko EDP ulje s Brača; izražena voćnost, ugodna gorčina i blaga pikantnost s mirisom svježe trave."},
+  {id:55,naziv:"Broč",sorta:"Ekstra djevičansko maslinovo ulje",podrijetlo:"Brač",boja:"ulje",opis:"Tradicionalno bračko maslinovo ulje; izvrsni balans, arome zelenog ploda masline i fina pikantnost."},
+  {id:56,naziv:"Familia",sorta:"Ekstra djevičansko maslinovo ulje",podrijetlo:"Brač",boja:"ulje",opis:"Premium obiteljsko ulje s Brača; iznimno harmonično, nježne note aromatičnog bilja, badema i dugotrajni završetak."},
+  {id:57,naziv:"Terrebianche",sorta:"Ekstra djevičansko maslinovo ulje",podrijetlo:"Istra",boja:"ulje",opis:"Vrhunsko istarsko EDP ulje; intenzivne zelene arome, izražena gorčina i pikantnost."},
+  {id:58,naziv:"Bokun uja",sorta:"Ekstra djevičansko maslinovo ulje",podrijetlo:"Brač",boja:"ulje",opis:"Autentično domaće bračko ulje; iznimno svježe i aromatično, savršen balans voćnosti i pikantnog završetka."},
+];
+
+const CAT_META = {
+  bijela: {icon:"🥂", label:"Bijelo", cls:"cat-bijela"},
+  rose:   {icon:"🌸", label:"Rosé",   cls:"cat-rose"},
+  crna:   {icon:"🍇", label:"Crno",   cls:"cat-crna"},
+  ulje:   {icon:"🫒", label:"Ulje",   cls:"cat-ulje"},
+};
+
+let deck=[], filter="sve", idx=0, flipped=false, known=new Set(), unknown=new Set();
+
+function shuffle(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+
+function getFiltered(){
+  const map={bijela:"bijela",rose:"rose",crna:"crna",ulje:"ulje"};
+  return filter==="sve" ? deck : deck.filter(w=>w.boja===map[filter]);
+}
+
+function doShuffle(){
+  deck=shuffle(ALL); idx=0; flipped=false; known=new Set(); unknown=new Set();
+  document.getElementById("results").classList.remove("show");
+  document.getElementById("app").style.display="";
+  document.getElementById("card-inner").classList.remove("flipped");
+  document.getElementById("btns").style.display="none";
+  document.getElementById("hint-tap").style.display="block";
+  render();
+}
+
+function setFilter(key){
+  filter=key; idx=0; flipped=false;
+  document.getElementById("card-inner").classList.remove("flipped");
+  document.getElementById("btns").style.display="none";
+  document.getElementById("hint-tap").style.display="block";
+  document.querySelectorAll(".filter-btn").forEach(b=>b.classList.toggle("active",b.dataset.key===key));
+  render();
+}
+
+function flipCard(){
+  flipped=!flipped;
+  document.getElementById("card-inner").classList.toggle("flipped",flipped);
+  document.getElementById("btns").style.display=flipped?"flex":"none";
+  document.getElementById("hint-tap").style.display=flipped?"none":"block";
+}
+
+function mark(yes){
+  const filtered=getFiltered();
+  const card=filtered[idx];
+  if(!card)return;
+  if(yes) known.add(card.id); else unknown.add(card.id);
+  if(idx>=filtered.length-1){ showResults(); return; }
+  idx++; flipped=false;
+  document.getElementById("card-inner").classList.remove("flipped");
+  document.getElementById("btns").style.display="none";
+  document.getElementById("hint-tap").style.display="block";
+  render();
+}
+
+function inFilter(id){
+  const w=ALL.find(x=>x.id===id);
+  if(!w) return false;
+  if(filter==="sve") return true;
+  return w.boja===filter;
+}
+
+function showResults(){
+  const k=[...known].filter(inFilter).length;
+  const u=[...unknown].filter(inFilter).length;
+  const pct=(k+u)>0?Math.round(k/(k+u)*100):0;
+  document.getElementById("res-emoji").textContent=pct>=80?"🏆":pct>=50?"📚":"💪";
+  document.getElementById("res-title").textContent=pct>=80?"Bravo!":pct>=50?"Solidno!":"Još malo!";
+  document.getElementById("res-pct").textContent=pct+"%";
+  document.getElementById("res-known").textContent="✓ "+k;
+  document.getElementById("res-unknown").textContent="✗ "+u;
+  document.getElementById("app").style.display="none";
+  document.getElementById("results").classList.add("show");
+}
+
+function render(){
+  const filtered=getFiltered();
+  const total=filtered.length;
+  const card=filtered[idx];
+  document.getElementById("prog-idx").textContent=(idx+1)+" / "+total;
+  document.getElementById("prog-known").textContent="✓ "+[...known].filter(inFilter).length;
+  document.getElementById("prog-fill").style.width=(total>0?(idx/total)*100:0)+"%";
+  if(!card) return;
+  const meta=CAT_META[card.boja];
+
+  document.getElementById("card-front").className="card-face card-front "+meta.cls;
+  document.getElementById("card-front").innerHTML=
+    `<span class="badge">${meta.icon} ${meta.label}</span>
+     <div class="card-naziv">${card.naziv}</div>
+     <div class="card-hint">tapni za odgovor</div>`;
+
+  document.getElementById("card-back").className="card-face card-back "+meta.cls;
+  document.getElementById("card-back").innerHTML=
+    `<div class="field"><div class="fl">Sorta</div><div class="fv">${card.sorta}</div></div>
+     <div class="field"><div class="fl">Podrijetlo</div><div class="fv">${card.podrijetlo}</div></div>
+     <div class="field field-opis div-line"><div class="fl">Opis</div><div class="fv">${card.opis}</div></div>`;
+}
+
+// Build filters
+(function(){
+  const defs=[
+    {key:"sve",emoji:"🍷",label:"Sve",count:ALL.length},
+    {key:"bijela",emoji:"🥂",label:"Bijela",count:ALL.filter(w=>w.boja==="bijela").length},
+    {key:"rose",emoji:"🌸",label:"Rosé",count:ALL.filter(w=>w.boja==="rose").length},
+    {key:"crna",emoji:"🍇",label:"Crna",count:ALL.filter(w=>w.boja==="crna").length},
+    {key:"ulje",emoji:"🫒",label:"Ulje",count:ALL.filter(w=>w.boja==="ulje").length},
+  ];
+  const c=document.getElementById("filters");
+  defs.forEach(f=>{
+    const b=document.createElement("button");
+    b.className="filter-btn"+(f.key==="sve"?" active":"");
+    b.dataset.key=f.key;
+    b.innerHTML=`${f.emoji} ${f.label} <span style="opacity:0.5;font-size:10px">(${f.count})</span>`;
+    b.onclick=()=>setFilter(f.key);
+    c.appendChild(b);
+  });
+})();
+
+doShuffle();
+</script>
+</body>
+</html>
