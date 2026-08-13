@@ -608,15 +608,6 @@ button.shot:focus-visible img{border-color:var(--seam-glow)}
 button.shot:hover .shot-zoom,
 button.shot:focus-visible .shot-zoom{background:var(--seam-glow);border-color:var(--seam-glow);color:var(--coal)}
 
-.shots figcaption{
-  grid-column:1/-1;
-  margin-top:var(--sp-1);
-  font-size:.85rem;
-  line-height:1.5;
-  color:var(--ash);
-}
-.project:hover .shots figcaption,
-.project:focus-within .shots figcaption{color:var(--smoke)}
 /* Below the card's single-column breakpoint the pair would be two thumbnails
    too small to read a boot log in, so they stack at full width instead. */
 @media (max-width:820px){
@@ -657,12 +648,23 @@ button.shot:focus-visible .shot-zoom{background:var(--seam-glow);border-color:va
 }
 .lb-bar{
   display:flex;
-  align-items:center;
+  align-items:flex-start;
   gap:var(--sp-4);
   flex-wrap:wrap;
 }
-.lb-label{font-size:.92rem;color:var(--smoke)}
-.lb-count{font-family:var(--mono);font-size:.8rem;color:var(--ash)}
+/* The description lives here rather than under the thumbnail: in the card it
+   was explaining images too small to be worth explaining, and it padded a card
+   that was already too tall. At full size the reader is actually looking. */
+.lb-text{flex:1 1 22rem;min-width:0}
+.lb-label{display:block;font-size:.92rem;font-weight:600;color:var(--white)}
+.lb-desc{
+  margin-top:.2rem;
+  max-width:74ch;
+  font-size:.88rem;
+  line-height:1.55;
+  color:var(--ash);
+}
+.lb-count{font-family:var(--mono);font-size:.8rem;color:var(--ash);padding-top:.2rem}
 .lb-nav{display:flex;gap:var(--sp-2);margin-left:auto}
 button.lb-btn{
   display:inline-flex;

@@ -331,8 +331,14 @@
 
     var bar = document.createElement("div");
     bar.className = "lb-bar";
+    var text = document.createElement("div");
+    text.className = "lb-text";
     var label = document.createElement("span");
     label.className = "lb-label";
+    var desc = document.createElement("p");
+    desc.className = "lb-desc";
+    text.appendChild(label);
+    text.appendChild(desc);
     var count = document.createElement("span");
     count.className = "lb-count";
     var nav = document.createElement("div");
@@ -354,7 +360,7 @@
     nav.appendChild(prevBtn);
     nav.appendChild(nextBtn);
     nav.appendChild(closeBtn);
-    bar.appendChild(label);
+    bar.appendChild(text);
     bar.appendChild(count);
     bar.appendChild(nav);
     frame.appendChild(big);
@@ -373,6 +379,8 @@
       if (src.getAttribute("height")) big.setAttribute("height", src.getAttribute("height"));
       big.alt = src.alt || "";
       label.textContent = src.dataset.label || "";
+      desc.textContent = src.dataset.desc || "";
+      desc.hidden = !src.dataset.desc;
       count.textContent = (i + 1) + " / " + shots.length;
       // One image means the arrows are decoration, so they go away entirely
       // rather than sitting there permanently dead.
