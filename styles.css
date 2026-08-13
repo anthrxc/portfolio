@@ -200,8 +200,10 @@ p{margin:0}
 }
 .nav-links a.nav-cta:hover{border-color:var(--seam-glow);color:var(--white)}
 
-/* Progressive trim: drop the least-load-bearing links before the row crowds,
-   so the remaining targets keep their spacing instead of shrinking. */
+/* Progressive trim: drop the least-load-bearing link before the row crowds,
+   so the remaining targets keep their spacing instead of shrinking. Only the
+   Beyond link trims now; the Archives rule went with the link itself, since
+   every remaining item is an in-page anchor the nav cannot do without. */
 @media (max-width:640px){
   .nav-in{padding-inline:var(--sp-3)}
   .nav-links{gap:var(--sp-3);margin-left:auto}
@@ -209,7 +211,6 @@ p{margin:0}
      produced clears SC 2.5.8's 24px but sits well under a thumb's comfortable
      reach, and this row is the page's only persistent navigation. */
   .nav-links a{font-size:.85rem;padding-block:.6rem}
-  .nav-secondary{display:none}
 }
 @media (max-width:380px){
   .nav-tertiary{display:none}
