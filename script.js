@@ -68,13 +68,17 @@
       var dot = document.createElement("i");
       dot.style.color = c;
       row.appendChild(dot);
+      // Built as nodes, not a concatenated innerHTML string: this is the one
+      // place page text comes from a data file, and the API path next to it is
+      // already textContent throughout.
       var label = document.createElement("span");
-      label.innerHTML = "<b>" + pct.toFixed(0) + "%</b> " + p[0];
+      var pctEl = document.createElement("b");
+      pctEl.textContent = pct.toFixed(0) + "%";
+      label.appendChild(pctEl);
+      label.appendChild(document.createTextNode(" " + p[0]));
       row.appendChild(label);
       key.appendChild(row);
     });
-
-    document.getElementById("langMix").hidden = false;
   }
 
   function renderTech(names){
@@ -106,7 +110,7 @@
     renderTech(snap.repos && snap.repos["profiler-machine"]);
     applyStars(snap.stars);
     document.getElementById("projectsNote").textContent =
-      "★ counts from a snapshot taken " + snap.generated;
+      "Stars and dates from GitHub, as of " + snap.generated;
   }
 
   // ---- Live upgrade -------------------------------------------------------
@@ -132,7 +136,7 @@
         if (when && repo.pushed_at) when.textContent = "Updated " + monthName(repo.pushed_at.slice(0, 7));
       });
 
-      document.getElementById("projectsNote").textContent = "★ counts live from the GitHub API";
+      document.getElementById("projectsNote").textContent = "Stars and dates read live from GitHub";
     })
     .catch(function(){
       // The snapshot is already on screen and its note already says so, so a
@@ -153,6 +157,14 @@
     var current = null;
     var queued = false;
 
+    // Publish the real header height so scroll-margin-top tracks it instead of
+    // a hardcoded literal that detunes every anchor when the pill's metrics
+    // change. The CSS fallback covers the pre-script paint.
+    function publishNavHeight(){
+      if (!header) return;
+      document.documentElement.style.setProperty("--nav-h", header.offsetHeight + "px");
+    }
+
     function apply(next){
       if (next === current) return;
       if (current) current.el.removeAttribute("aria-current");
@@ -162,6 +174,7 @@
 
     function measure(){
       queued = false;
+      publishNavHeight();
       // A section counts as current once its top clears the sticky header.
       var line = window.scrollY + (header ? header.offsetHeight : 0) + 8;
       var found = null;
@@ -185,6 +198,76 @@
     window.addEventListener("resize", schedule);
     window.addEventListener("hashchange", schedule);
     measure();
+  })();
+
+  // ---- Click to copy the contact address ----------------------------------
+  // Built from script rather than shipped as markup, so the no-JS page keeps
+  // plain selectable text instead of a control that cannot work.
+  (function copyEmail(){
+    var el = document.querySelector(".contact-mail");
+    if (!el || el.tagName === "BUTTON") return;
+    var address = el.textContent.trim();
+
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "contact-mail";
+    btn.textContent = address;
+    // The visible address is contained in the accessible name, per SC 2.5.3.
+    btn.setAttribute("aria-label", "Copy email address " + address);
+
+    var note = document.createElement("span");
+    note.className = "copy-note";
+    note.setAttribute("role", "status");
+
+    el.replaceWith(btn);
+    btn.after(note);
+
+    function selectSelf(){
+      var range = document.createRange();
+      range.selectNodeContents(btn);
+      var sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+    }
+
+    function copy(text){
+      // navigator.clipboard needs a secure context; a plain-http preview on a
+      // LAN or tailnet address is not one, so fall back to the old path.
+      if (navigator.clipboard && window.isSecureContext) {
+        return navigator.clipboard.writeText(text);
+      }
+      return new Promise(function(resolve, reject){
+        var ta = document.createElement("textarea");
+        ta.value = text;
+        ta.setAttribute("readonly", "");
+        ta.style.position = "fixed";
+        ta.style.top = "-1000px";
+        document.body.appendChild(ta);
+        ta.select();
+        var ok = false;
+        try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+        document.body.removeChild(ta);
+        ok ? resolve() : reject(new Error("copy unavailable"));
+      });
+    }
+
+    var clear = null;
+    function say(msg){
+      note.textContent = msg;
+      clearTimeout(clear);
+      clear = setTimeout(function(){ note.textContent = ""; }, 2400);
+    }
+
+    btn.addEventListener("click", function(){
+      copy(address).then(function(){
+        say("Copied");
+      }).catch(function(){
+        // Nothing was copied, so hand the address over another way rather than
+        // claiming success.
+        selectSelf();
+        say("Press Ctrl+C to copy");
+      });
+    });
   })();
 
   // ---- Stack easter egg ---------------------------------------------------

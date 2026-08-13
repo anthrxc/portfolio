@@ -9,19 +9,47 @@
 // the live API only upgrades them.
 //
 // Run after shipping work you want reflected:  node tools/snapshot.mjs
+//
+// One run costs roughly 2 + N requests, where N is every public repo across
+// the accounts below. Anonymous GitHub allows 60 per hour, so a few runs in
+// quick succession will exhaust it. Set GITHUB_TOKEN to raise the ceiling to
+// 5000/hour:  GITHUB_TOKEN=ghp_... node tools/snapshot.mjs
+// A read-only token with no scopes is enough; this only reads public data.
 
 import { readFile, writeFile } from "node:fs/promises";
 
 const USER = "anthrxc";
+// The language mix spans everything public with his name on it. The archives
+// org holds the retired work, and leaving it out understated JavaScript badly
+// enough that the headline and the bar disagreed.
+const ORGS = ["anthrxc-archives"];
 const SHOWN = ["profiler-machine", "portfolio", "v14-template"];
 const FEATURE = "profiler-machine";
 // Segment colours mirror --seam-glow / --seam / --ash / --edge-strong.
 const COLORS = ["#b27fe0", "#8844a8", "#93999d", "#5d676f"];
 
+const TOKEN = process.env.GITHUB_TOKEN || "";
+
 const api = async (path) => {
-  const res = await fetch(`https://api.github.com${path}`, {
-    headers: { Accept: "application/vnd.github+json" },
-  });
+  const headers = { Accept: "application/vnd.github+json" };
+  if (TOKEN) headers.Authorization = `Bearer ${TOKEN}`;
+
+  const res = await fetch(`https://api.github.com${path}`, { headers });
+
+  if (res.status === 403 || res.status === 429) {
+    const remaining = res.headers.get("x-ratelimit-remaining");
+    if (remaining === "0") {
+      const reset = Number(res.headers.get("x-ratelimit-reset") || 0) * 1000;
+      const mins = Math.max(1, Math.ceil((reset - Date.now()) / 60000));
+      console.error(
+        `\nGitHub rate limit exhausted (${TOKEN ? "authenticated" : "anonymous, 60/hour"}).` +
+        `\nResets in about ${mins} minute${mins === 1 ? "" : "s"}, at ${new Date(reset).toLocaleTimeString()}.` +
+        (TOKEN ? "" : "\nSet GITHUB_TOKEN to raise the ceiling to 5000/hour.") +
+        `\n\nindex.html was not modified; the previous snapshot is still in place.\n`
+      );
+      process.exit(1);
+    }
+  }
   if (!res.ok) throw new Error(`${res.status} ${res.statusText} on ${path}`);
   return res.json();
 };
@@ -39,12 +67,16 @@ const region = (html, name, body) => {
 };
 
 const repos = (await api(`/users/${USER}/repos?per_page=100`)).filter((r) => !r.fork);
+const orgRepos = (await Promise.all(
+  ORGS.map((o) => api(`/orgs/${o}/repos?per_page=100`))
+)).flat().filter((r) => !r.fork);
 
+// Keyed by full_name so a repo of the same name in two accounts cannot collide.
 const totals = {};
 const perRepo = {};
-for (const repo of repos) {
-  const langs = await api(`/repos/${USER}/${repo.name}/languages`);
-  perRepo[repo.name] = langs;
+for (const repo of [...repos, ...orgRepos]) {
+  const langs = await api(new URL(repo.languages_url).pathname);
+  perRepo[repo.full_name] = langs;
   for (const [name, bytes] of Object.entries(langs)) {
     totals[name] = (totals[name] || 0) + bytes;
   }
@@ -68,7 +100,7 @@ const snapshot = {
   // Languages under 5% of a repo are noise in a chip row: "Batchfile" beside
   // "Python" reads as a claimed skill rather than a byte count.
   repos: Object.fromEntries(SHOWN.map((n) => {
-    const langs = perRepo[n] || {};
+    const langs = perRepo[`${USER}/${n}`] || {};
     const total = Object.values(langs).reduce((a, b) => a + b, 0) || 1;
     return [n, Object.entries(langs)
       .filter(([, bytes]) => bytes / total >= 0.05)
@@ -128,4 +160,4 @@ html = html.replace(
   `$1${snapshot.generated}$2`);
 
 await writeFile("index.html", html, "utf8");
-console.log(`Snapshot written: ${snapshot.languages.length} languages, stars ${JSON.stringify(snapshot.stars)}, generated ${snapshot.generated}.`);
+console.log(`Snapshot written: ${snapshot.languages.length} languages across ${repos.length + orgRepos.length} public repos (${repos.length} personal, ${orgRepos.length} archived), generated ${snapshot.generated}.`);

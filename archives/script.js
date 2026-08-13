@@ -52,10 +52,9 @@
         if (lang) lang.textContent = repo.language;
       }
 
-      if (repo.description){
-        var desc = box.querySelector(".box-panel-in > p");
-        if (desc) desc.textContent = repo.description;
-      }
+      // The authored line stays authored. The GitHub blurb is a one-line repo
+      // summary; these paragraphs are the only reason this page exists, and
+      // overwriting them left the jokes visible only when the fetch failed.
 
       // License: prefer the live SPDX id, but never overwrite an authored note
       // (e.g. reaperbot's "the first one") or blank out a repo with no license.

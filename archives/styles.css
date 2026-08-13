@@ -26,11 +26,15 @@
   --anthracite:#23282c;
   --anthracite-2:#2c3338;
   --edge:#373f45;
+  /* Interactive-control borders need 3:1 against coal for WCAG 1.4.11; --edge
+     is 1.66:1 and stays the hairline for dividers and shelf edges only. */
+  --edge-strong:#5d676f;
   --ash:#93999d;
   --smoke:#cbd0d4;
   --white:#f4f6f7;
   --seam:#8844a8;
   --seam-glow:#b27fe0;
+  --seam-wash:rgba(178,127,224,.16);
 
   --r-sm:6px;
   --r-md:14px;
@@ -75,10 +79,11 @@ svg{display:block}
 h1,h2,h3{font-family:var(--sans);color:var(--white);margin:0}
 p{margin:0}
 
+/* No border-radius: outlines follow the element's own corner, and the blanket
+   2px only ever rounded elements that had no business being rounded. */
 :focus-visible{
   outline:2px solid var(--seam-glow);
   outline-offset:3px;
-  border-radius:2px;
 }
 
 .skip-link{
@@ -130,7 +135,7 @@ p{margin:0}
   align-items:center;
   gap:var(--sp-6);
 }
-.brand{display:block;line-height:0;flex:none;border-radius:2px}
+.brand{display:block;line-height:0;flex:none;border-radius:var(--r-sm)}
 .brand .mark{height:18px;width:auto;transition:opacity .18s var(--ease)}
 .brand:hover .mark{opacity:.75}
 .nav-cta{
@@ -140,7 +145,7 @@ p{margin:0}
   text-decoration:none;
   color:var(--white);
   background:var(--anthracite-2);
-  border:1px solid var(--edge);
+  border:1px solid var(--edge-strong);
   border-radius:var(--r-sm);
   padding:.5rem 1rem;
   transition:background-color .18s var(--ease),border-color .18s var(--ease);
@@ -149,11 +154,14 @@ p{margin:0}
 
 /* ---------- Hero ---------- */
 .hero{padding-block:clamp(3.5rem,9vw,6rem) clamp(2rem,5vw,3rem)}
+/* Matches the main site's Display role after it stepped down from 800/5.25rem:
+   the system has one display setting, and the archives shell shares it. */
 .hero h1{
-  font-weight:800;
-  font-size:clamp(2.75rem,6.4vw,5.25rem);
-  line-height:.98;
-  letter-spacing:-.03em;
+  font-weight:700;
+  font-size:clamp(2rem,3.6vw,3rem);
+  line-height:1.1;
+  letter-spacing:-.02em;
+  text-wrap:balance;
   margin:0 0 var(--sp-5);
 }
 .lede{
@@ -297,16 +305,21 @@ p{margin:0}
   font-weight:600;
   text-decoration:none;
   padding:.7rem 1.25rem;
-  border:1px solid var(--edge);
+  border:1px solid var(--edge-strong);
   border-radius:var(--r-sm);
   color:var(--smoke);
   background:transparent;
   transition:background-color .18s var(--ease),color .18s var(--ease),border-color .18s var(--ease),transform .18s var(--ease);
 }
-.btn:hover{border-color:var(--seam);background:var(--anthracite-2);color:var(--white)}
+/* seam on the hovered fill is 2.10:1 and fails 1.4.11 for a state change.
+   seam-glow is 4.28:1. Same defect already fixed on the main site. */
+.btn:hover{border-color:var(--seam-glow);background:var(--anthracite-2);color:var(--white)}
 .btn:active{transform:translateY(1px)}
 .btn-ghost{border-color:var(--seam-glow);color:var(--seam-glow)}
-.btn-ghost:hover{background:var(--seam-glow);border-color:var(--seam-glow);color:var(--coal)}
+/* A tint, not a solid fill: the solid version is the primary button's resting
+   state on the main site, and the ghost must not impersonate it. */
+.btn-ghost:hover{background:var(--seam-wash);border-color:var(--seam-glow);color:var(--white)}
+.btn-ghost:focus-visible{outline-color:var(--white)}
 
 .foot{margin-top:var(--sp-8)}
 .foot-in{

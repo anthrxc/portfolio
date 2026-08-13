@@ -69,8 +69,11 @@
 
 *,*::before,*::after{box-sizing:border-box}
 html{scroll-behavior:smooth}
-/* Anchor jumps otherwise land headings 11px under the 69px sticky header. */
-section[id]{scroll-margin-top:calc(69px + var(--sp-5))}
+/* Anchor jumps otherwise land headings under the sticky header. --nav-h is
+   measured and set by script.js; the literal is only the pre-script fallback,
+   since hardcoding it silently detuned every anchor when the pill's metrics
+   changed. */
+section[id]{scroll-margin-top:calc(var(--nav-h,69px) + var(--sp-5))}
 body{
   margin:0;
   background:
@@ -89,10 +92,12 @@ svg{display:block}
 h1,h2,h3{font-family:var(--sans);color:var(--white);margin:0}
 p{margin:0}
 
+/* No border-radius here: every control that needed one already sets its own at
+   equal specificity later in the file, so the rule only ever applied to
+   elements it had no business rounding. Outlines follow the element's radius. */
 :focus-visible{
   outline:2px solid var(--seam-glow);
   outline-offset:3px;
-  border-radius:2px;
 }
 
 .skip-link{
@@ -144,7 +149,7 @@ p{margin:0}
   align-items:center;
   gap:var(--sp-6);
 }
-.brand{display:flex;align-items:center;line-height:0;flex:none;border-radius:2px;padding-block:.5rem}
+.brand{display:flex;align-items:center;line-height:0;flex:none;border-radius:var(--r-sm);padding-block:.5rem}
 .brand .mark{height:18px;width:auto;transition:opacity .18s var(--ease)}
 .brand:hover .mark{opacity:.75}
 
@@ -176,7 +181,6 @@ p{margin:0}
   right:0;
   bottom:-2px;
   height:2px;
-  border-radius:1px;
   background:var(--seam-glow);
 }
 .nav-links a.nav-cta[aria-current]{border-color:var(--seam-glow)}
@@ -201,12 +205,16 @@ p{margin:0}
 @media (max-width:640px){
   .nav-in{padding-inline:var(--sp-3)}
   .nav-links{gap:var(--sp-3);margin-left:auto}
-  .nav-links a{font-size:.86rem}
+  /* Taller block padding on touch: the 33px target that the desktop .35rem
+     produced clears SC 2.5.8's 24px but sits well under a thumb's comfortable
+     reach, and this row is the page's only persistent navigation. */
+  .nav-links a{font-size:.85rem;padding-block:.6rem}
   .nav-secondary{display:none}
 }
 @media (max-width:380px){
   .nav-tertiary{display:none}
 }
+
 
 /* ---------- Hero ---------- */
 .hero{padding-block:clamp(4rem,10vw,6.5rem) clamp(2.5rem,6vw,4rem)}
@@ -214,13 +222,20 @@ p{margin:0}
    whether to hire has never heard the name, and the wordmark already carries
    identity in the header. The name moves into the lede rather than sitting
    above the heading as a kicker. */
+/* Weight 700 at 3rem, not 800 at 3.75rem: the proposition-first decision is
+   sound, but set at maximum weight and tightest tracking it filled the first
+   viewport and read as a shout rather than a statement. The volume was the
+   problem, not the sentence. */
 .hero h1{
-  max-width:20ch;
-  font-weight:800;
+  max-width:28ch;
+  font-weight:700;
   font-stretch:100%;
-  font-size:clamp(2.25rem,4.6vw,3.75rem);
-  line-height:1.04;
-  letter-spacing:-.03em;
+  font-size:clamp(1.9rem,3.4vw,2.9rem);
+  line-height:1.1;
+  letter-spacing:-.02em;
+  /* Without this the sentence stranded "off." alone on a third line at 390px.
+     Progressive enhancement: unsupported browsers just get normal wrapping. */
+  text-wrap:balance;
   margin:0 0 var(--sp-4);
 }
 .lede{
@@ -269,16 +284,53 @@ p{margin:0}
 
 /* ---------- Stack ---------- */
 .stack{padding-block:var(--sp-6);border-bottom:1px solid var(--edge)}
+/* Visible, not screen-reader-only. Hidden, the section handed the reader five
+   unlabelled logos and a meter with no statement of what either was for, and
+   proximity made the meter's caption read as the logo row's label. */
+.stack-h{
+  font-size:1.02rem;
+  font-weight:700;
+  letter-spacing:-.01em;
+  margin-bottom:var(--sp-5);
+}
+/* Grid, not flex: the row spreads across the full content column so it shares
+   the meter's right edge, and equal tracks keep a wrapped final row aligned
+   with the one above it. Flex space-between flung the last two items 215px
+   apart once the row broke. */
 .stack-list{
   list-style:none;
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:flex-start;
-  gap:var(--sp-4) var(--sp-6);
+  display:grid;
+  /* Explicit tracks, not auto-fit: there are exactly five items, and the only
+     tidy arrangements are 5 or 3+2. auto-fit happily produced 4 plus a lone
+     orphan at tablet widths. */
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:var(--sp-5) var(--sp-4);
   margin:0;padding:0;
   color:var(--ash);
 }
-.stack-slot{position:relative}
+/* Must follow .stack-list: a media query adds no specificity, so declaring
+   this earlier in the file let the 5-track rule win at every width. */
+@media (max-width:640px){
+  .stack-list{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+/* At the narrowest supported width the three tracks get tight enough to break
+   "HTML / CSS" over two lines; a smaller column gap buys back the room. */
+@media (max-width:380px){
+  .stack-list{column-gap:var(--sp-2)}
+}
+/* justify-self shrinks the slot to its button, which also keeps the tooltip's
+   left:50% centred on the icon rather than on an empty stretched cell.
+   Wrapped rows align to the page spine; centring there only inset the first
+   icon from the left edge everything else shares. */
+.stack-slot{position:relative;justify-self:start}
+/* On a single row the outer two reach the band's edges and the rest space out
+   between them, so the row spans the full width instead of each icon hugging
+   the left of its own cell. */
+@media (min-width:641px){
+  .stack-slot{justify-self:center}
+  .stack-slot:first-child{justify-self:start}
+  .stack-slot:last-child{justify-self:end}
+}
 .stack-item{
   display:flex;
   flex-direction:column;
@@ -368,11 +420,22 @@ p{margin:0}
 /* The band shares the page spine. Every other element on the page starts at
    the same left edge; a centred island here broke it at the exact point a
    visitor decides whether to keep scrolling. og.png already does it this way. */
+/* Full content width, like the project grid and every section heading. The
+   band shares the page's left edge AND its right edge; capping it at 560
+   stranded a 476px void beside a meter that is supposed to read as 100%. */
+/* Separated from the icon row by a rule and a full step of space, so the meter
+   reads as its own measurement rather than as proof of the claim above it. */
 .lang-mix{
-  max-width:560px;
-  margin:var(--sp-5) 0 0;
+  margin:var(--sp-6) 0 0;
+  padding-top:var(--sp-5);
+  border-top:1px solid var(--edge);
 }
+/* Scopes its own measurement. The row above claims what I work in; this claims
+   only what is public and how much of it there is. Without the second sentence
+   the adjacency read as an audit of the row, and two languages in that row have
+   no public bytes to show. */
 .lang-cap{
+  max-width:62ch;
   font-size:.8rem;
   color:var(--ash);
   margin-bottom:var(--sp-3);
@@ -441,6 +504,19 @@ p{margin:0}
 .project:focus-within .project-body h3 a,
 .project:hover .project-link,
 .project:focus-within .project-link{color:var(--seam-lift)}
+/* The facts rail lifts too. Left on --ash it dropped to 4.00:1 on the raised
+   surface, and "Updated <month>" is the item a client actually reads. Chip
+   borders take --ash rather than --edge-strong, which measures 2.00:1 there. */
+.project:hover .project-meta,
+.project:focus-within .project-meta{color:var(--smoke)}
+.project:hover .lang,
+.project:focus-within .lang,
+.project:hover .project-license,
+.project:focus-within .project-license,
+.project:hover .project-updated,
+.project:focus-within .project-updated{color:var(--smoke)}
+.project:hover .project-tech li,
+.project:focus-within .project-tech li{color:var(--smoke);border-color:var(--ash)}
 .project--feature{grid-column:span 2}
 .project-body h3{font-size:1.25rem;font-weight:700;letter-spacing:-.01em}
 .project-body h3 a{text-decoration:none}
@@ -452,7 +528,7 @@ p{margin:0}
 .project-body p{
   margin-top:var(--sp-2);
   max-width:66ch;
-  font-size:.96rem;
+  font-size:.95rem;
   color:var(--ash);
 }
 .project-note{
@@ -475,7 +551,7 @@ p{margin:0}
 }
 .project-tech li{
   font-family:var(--mono);
-  font-size:.74rem;
+  font-size:.8rem;
   color:var(--ash);
   border:1px solid var(--edge);
   border-radius:var(--r-sm);
@@ -527,7 +603,7 @@ p{margin:0}
   display:inline-flex;
   align-items:center;
   gap:.4rem;
-  font-size:.86rem;
+  font-size:.85rem;
   font-weight:600;
   color:var(--ash);
   text-decoration:none;
@@ -611,27 +687,56 @@ p{margin:0}
 .contact .lede{margin-bottom:var(--sp-4)}
 /* The two questions a stranger has before emailing: what happens next, and
    how long until they hear back. One sentence each, no card, no icon row. */
+/* Smoke, not ash: this is the highest-stakes sentence on the surface, and set
+   in muted grey it was dimmer than the reassurance line beneath it. */
 .contact-process{
   max-width:62ch;
   font-size:.98rem;
-  color:var(--ash);
-  margin-bottom:var(--sp-6);
+  color:var(--smoke);
+  margin-bottom:var(--sp-3);
 }
+/* Above the buttons and at body weight, not a footnote under them. The address
+   and the reply time are the only two concrete promises on the page, and the
+   address is the recovery path for a visitor whose mailto: opens nothing;
+   both were previously the smallest, dimmest type in the section. */
 .contact-reply{
-  margin-top:var(--sp-4);
-  font-size:.88rem;
-  color:var(--ash);
+  margin-bottom:var(--sp-6);
+  font-size:1rem;
+  color:var(--smoke);
 }
-/* A mailto with no visible address is a dead end for anyone without a mail
-   client configured: there is nothing on screen to copy. */
+/* Deliberately not a link. The button already carries the mailto; this exists
+   for the visitor who has no mail client, so it has to be readable and
+   copyable rather than a second control to the same dead end. user-select:all
+   makes one click or tap grab the whole address. */
 .contact-mail{
   font-family:var(--mono);
   color:var(--smoke);
-  text-decoration:none;
-  border-bottom:1px solid var(--edge-strong);
-  transition:color .18s var(--ease),border-color .18s var(--ease);
+  user-select:all;
+  -webkit-user-select:all;
 }
-.contact-mail:hover{color:var(--white);border-bottom-color:var(--seam-glow)}
+/* Script upgrades the span to a click-to-copy button. Affordance is a tint on
+   hover rather than an underline: an underline would read as a link to the
+   same dead end the visible address exists to avoid, and the dashed rule is
+   already spoken for by the stack easter egg. */
+button.contact-mail{
+  border:0;
+  margin:0;
+  padding:.1rem .3rem;
+  margin-inline-start:-.3rem;
+  border-radius:var(--r-sm);
+  background:transparent;
+  font-size:inherit;
+  line-height:inherit;
+  cursor:pointer;
+  transition:background-color .18s var(--ease),color .18s var(--ease);
+}
+button.contact-mail:hover{background:var(--seam-wash);color:var(--white)}
+.copy-note{
+  margin-inline-start:.5rem;
+  font-family:var(--sans);
+  color:var(--seam-glow);
+}
+.copy-note:empty{margin-inline-start:0}
 
 /* The rule belongs to the footer, not to its inner column. On .foot-in it
    inherited the gutter and overhung every other content edge by 72px. */
@@ -646,13 +751,16 @@ p{margin:0}
   font-size:.85rem;
   color:var(--ash);
 }
+/* Ash at rest, violet on hover, like every other secondary link. As the only
+   saturated colour in the page's last frame it made a donation ask the visual
+   focal point of the closing viewport, directly after the commercial one. */
 .foot-link{
   color:var(--ash);
   text-decoration:none;
-  padding-block:.35rem;
+  padding-block:.5rem;
   transition:color .18s var(--ease);
 }
-.foot-link:hover{color:var(--white)}
+.foot-link:hover{color:var(--seam-glow)}
 
 /* ---------- Motion ---------- */
 /* Content is fully visible from first paint; the entrance is a transform-only

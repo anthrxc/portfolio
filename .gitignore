@@ -1,0 +1,7 @@
+# Private working documents. This repository is public; these are not.
+# They hold product strategy, positioning, audience notes and resolved design
+# decisions, and they stay local by explicit choice. Keep a backup somewhere
+# other than this working tree, because nothing here protects them from a
+# lost disk or an accidental clean.
+DESIGN.md
+PRODUCT.md
