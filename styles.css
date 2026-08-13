@@ -538,6 +538,29 @@ p{margin:0}
   color:var(--smoke);
 }
 
+/* The page sells building things, so it has to show one. Width and height are
+   on the <img> so the reserved box is correct before the file lands and the
+   card never reflows under the reader. */
+.shot{
+  margin:var(--sp-5) 0 0;
+  max-width:300px;
+}
+.shot img{
+  display:block;
+  width:100%;
+  height:auto;
+  border:1px solid var(--edge);
+  border-radius:var(--r-sm);
+}
+.shot figcaption{
+  margin-top:var(--sp-2);
+  font-size:.85rem;
+  line-height:1.5;
+  color:var(--ash);
+}
+.project:hover .shot figcaption,
+.project:focus-within .shot figcaption{color:var(--smoke)}
+
 /* The feature card earns its doubled width with more evidence, not more air. */
 .project--feature .project-body h3{font-size:1.55rem;letter-spacing:-.02em}
 .project--feature .project-body > p:first-of-type{font-size:1.05rem;color:var(--smoke)}
