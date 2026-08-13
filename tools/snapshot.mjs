@@ -2,7 +2,7 @@
 // Regenerates every GitHub-derived region of index.html.
 //
 // Why a snapshot at all: the unauthenticated GitHub API allows 60 requests per
-// hour per IP. Anyone behind a shared address — a university, an office — can
+// hour per IP. Anyone behind a shared address (a university, an office) can
 // land here with the budget already spent, and the language bar is the page's
 // load-bearing "real data" evidence. So the bar, the tech chips and the star
 // counts are all written into the markup, render with JavaScript disabled, and
@@ -56,10 +56,25 @@ const snapshot = {
     const r = repos.find((x) => x.name === n);
     return [n, r ? r.stargazers_count : 0];
   })),
+  // "Is he shipping right now" is a top-three question for a prospective
+  // client, and star counts do not answer it.
+  updated: Object.fromEntries(SHOWN.map((n) => {
+    const r = repos.find((x) => x.name === n);
+    return [n, r ? r.pushed_at.slice(0, 7) : null];
+  })),
   languages: Object.entries(totals)
     .sort((a, b) => b[1] - a[1])
     .map(([name, bytes]) => ({ name, bytes })),
-  repos: Object.fromEntries(SHOWN.map((n) => [n, Object.keys(perRepo[n] || {})])),
+  // Languages under 5% of a repo are noise in a chip row: "Batchfile" beside
+  // "Python" reads as a claimed skill rather than a byte count.
+  repos: Object.fromEntries(SHOWN.map((n) => {
+    const langs = perRepo[n] || {};
+    const total = Object.values(langs).reduce((a, b) => a + b, 0) || 1;
+    return [n, Object.entries(langs)
+      .filter(([, bytes]) => bytes / total >= 0.05)
+      .sort((a, b) => b[1] - a[1])
+      .map(([name]) => name)];
+  })),
 };
 
 // Top three languages plus an "Other" bucket, matching what script.js renders.
@@ -88,11 +103,24 @@ html = region(html, "feature-tech",
   `</ul>`);
 
 // Star counts live in the markup so they survive a rate-limited load. The badge
-// stays hidden at zero — a 0 next to the credibility pitch says nothing useful.
+// stays hidden at zero, because a 0 next to the credibility pitch says nothing.
 for (const [name, n] of Object.entries(snapshot.stars)) {
   const article = new RegExp(`(data-repo="${name}"[\\s\\S]*?<span class="stars" data-stars)( hidden)?([\\s\\S]*?<span class="stars-n">)\\d+(</span>)`);
   if (!article.test(html)) throw new Error(`could not locate star markup for ${name}`);
   html = html.replace(article, `$1${n < 1 ? " hidden" : ""}$3${n}$4`);
+}
+
+const MONTHS = ["January","February","March","April","May","June",
+  "July","August","September","October","November","December"];
+const monthName = (ym) => {
+  if (!ym) return "n/a";
+  const [y, m] = ym.split("-");
+  return `${MONTHS[Number(m) - 1]} ${y}`;
+};
+for (const [name, ym] of Object.entries(snapshot.updated)) {
+  const slot = new RegExp(`(data-repo="${name}"[\\s\\S]*?<span class="project-updated" data-updated>)[^<]*(</span>)`);
+  if (!slot.test(html)) throw new Error(`could not locate updated slot for ${name}`);
+  html = html.replace(slot, `$1Updated ${monthName(ym)}$2`);
 }
 
 html = html.replace(
