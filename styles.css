@@ -541,25 +541,46 @@ p{margin:0}
 /* The page sells building things, so it has to show one. Width and height are
    on the <img> so the reserved box is correct before the file lands and the
    card never reflows under the reader. */
-.shot{
+/* Two shots, because the description makes two claims: a desktop system that
+   detects and tracks, and a mobile interface for watching it remotely. The
+   boot log evidences the first by naming the subsystems; the login screen
+   evidences the second. align-items:start so the shorter image doesn't
+   stretch to match the taller one's aspect. */
+/* Stacked, not side by side. Paired in two columns the boot log rendered at
+   ~300px, where its type is about 5px and the subsystem names it exists to
+   show are unreadable. An illegible screenshot evidences nothing, so the log
+   takes the full prose measure and the login sits under it at phone size. */
+.shots{
   margin:var(--sp-5) 0 0;
-  max-width:300px;
+  display:grid;
+  grid-template-columns:minmax(0,1fr);
+  justify-items:start;
+  gap:var(--sp-3);
+  max-width:560px;
 }
-.shot img{
+.shots img:nth-of-type(2){max-width:230px}
+.shots img{
   display:block;
   width:100%;
   height:auto;
+  background:#000;
   border:1px solid var(--edge);
   border-radius:var(--r-sm);
 }
-.shot figcaption{
-  margin-top:var(--sp-2);
+.shots figcaption{
+  grid-column:1/-1;
+  margin-top:var(--sp-1);
   font-size:.85rem;
   line-height:1.5;
   color:var(--ash);
 }
-.project:hover .shot figcaption,
-.project:focus-within .shot figcaption{color:var(--smoke)}
+.project:hover .shots figcaption,
+.project:focus-within .shots figcaption{color:var(--smoke)}
+/* Below the card's single-column breakpoint the pair would be two thumbnails
+   too small to read a boot log in, so they stack at full width instead. */
+@media (max-width:820px){
+  .shots{max-width:100%}
+}
 
 /* The feature card earns its doubled width with more evidence, not more air. */
 .project--feature .project-body h3{font-size:1.55rem;letter-spacing:-.02em}
