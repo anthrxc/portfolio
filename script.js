@@ -270,6 +270,140 @@
     });
   })();
 
+  // ---- Screenshot lightbox ------------------------------------------------
+  // Thumbnails stay small in the card and open to viewport size on click.
+  // Built from script, like the copy button: without JS the page keeps plain
+  // images rather than advertising a control that cannot open anything.
+  (function lightbox(){
+    var figure = document.querySelector(".shots");
+    if (!figure || typeof HTMLDialogElement === "undefined") return;
+
+    var shots = Array.prototype.slice.call(figure.querySelectorAll("img"));
+    if (!shots.length) return;
+
+    var SVG_NS = "http://www.w3.org/2000/svg";
+    function icon(d, extra){
+      var svg = document.createElementNS(SVG_NS, "svg");
+      svg.setAttribute("viewBox", "0 0 16 16");
+      svg.setAttribute("aria-hidden", "true");
+      var path = document.createElementNS(SVG_NS, "path");
+      path.setAttribute("d", d);
+      svg.appendChild(path);
+      if (extra){
+        var p2 = document.createElementNS(SVG_NS, "path");
+        p2.setAttribute("d", extra);
+        svg.appendChild(p2);
+      }
+      return svg;
+    }
+    var D_EXPAND = "M6 2H2v4M10 14h4v-4M14 6V2h-4M2 10v4h4";
+    var D_PREV   = "M10 3L5 8l5 5";
+    var D_NEXT   = "M6 3l5 5-5 5";
+    var D_CLOSE  = "M4 4l8 8M12 4l-8 8";
+
+    // Wrap each shot in a button and mark it with a persistent zoom chip.
+    var triggers = shots.map(function(img, i){
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "shot";
+      btn.setAttribute("aria-label", "Expand: " + (img.dataset.label || "screenshot"));
+      img.parentNode.insertBefore(btn, img);
+      btn.appendChild(img);
+
+      var chip = document.createElement("span");
+      chip.className = "shot-zoom";
+      chip.appendChild(icon(D_EXPAND));
+      btn.appendChild(chip);
+
+      btn.addEventListener("click", function(){ open(i); });
+      return btn;
+    });
+
+    var dlg = document.createElement("dialog");
+    dlg.className = "lightbox";
+    dlg.setAttribute("aria-label", "Screenshot viewer");
+
+    var frame = document.createElement("div");
+    frame.className = "lb-frame";
+
+    var big = document.createElement("img");
+    big.className = "lb-img";
+
+    var bar = document.createElement("div");
+    bar.className = "lb-bar";
+    var label = document.createElement("span");
+    label.className = "lb-label";
+    var count = document.createElement("span");
+    count.className = "lb-count";
+    var nav = document.createElement("div");
+    nav.className = "lb-nav";
+
+    function control(cls, aria, d, onClick){
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "lb-btn " + cls;
+      b.setAttribute("aria-label", aria);
+      b.appendChild(icon(d));
+      b.addEventListener("click", onClick);
+      return b;
+    }
+    var prevBtn  = control("lb-prev",  "Previous screenshot", D_PREV,  function(){ step(-1); });
+    var nextBtn  = control("lb-next",  "Next screenshot",     D_NEXT,  function(){ step(1); });
+    var closeBtn = control("lb-close", "Close viewer",        D_CLOSE, function(){ dlg.close(); });
+
+    nav.appendChild(prevBtn);
+    nav.appendChild(nextBtn);
+    nav.appendChild(closeBtn);
+    bar.appendChild(label);
+    bar.appendChild(count);
+    bar.appendChild(nav);
+    frame.appendChild(big);
+    frame.appendChild(bar);
+    dlg.appendChild(frame);
+    document.body.appendChild(dlg);
+
+    var at = 0;
+    function render(i){
+      var src = shots[i];
+      at = i;
+      big.src = src.currentSrc || src.src;
+      // Carried over so the expanded view reserves the right box before the
+      // decode lands, exactly as the thumbnail does.
+      if (src.getAttribute("width"))  big.setAttribute("width",  src.getAttribute("width"));
+      if (src.getAttribute("height")) big.setAttribute("height", src.getAttribute("height"));
+      big.alt = src.alt || "";
+      label.textContent = src.dataset.label || "";
+      count.textContent = (i + 1) + " / " + shots.length;
+      // One image means the arrows are decoration, so they go away entirely
+      // rather than sitting there permanently dead.
+      nav.insertBefore(prevBtn, nav.firstChild);
+      prevBtn.hidden = nextBtn.hidden = shots.length < 2;
+    }
+    function step(d){ render((at + d + shots.length) % shots.length); }
+    function open(i){
+      render(i);
+      dlg.showModal();
+      closeBtn.focus();
+    }
+
+    dlg.addEventListener("keydown", function(e){
+      if (shots.length < 2) return;
+      if (e.key === "ArrowRight"){ e.preventDefault(); step(1); }
+      else if (e.key === "ArrowLeft"){ e.preventDefault(); step(-1); }
+    });
+    // Click outside the frame closes. The dialog element itself is the
+    // backdrop's hit area, so anything not inside .lb-frame counts as outside.
+    dlg.addEventListener("click", function(e){
+      if (!frame.contains(e.target)) dlg.close();
+    });
+    // Focus returns to the thumbnail that opened it, which the browser does on
+    // its own only when the trigger is still focusable and in the document.
+    dlg.addEventListener("close", function(){
+      var t = triggers[at];
+      if (t) t.focus();
+    });
+  })();
+
   // ---- Stack easter egg ---------------------------------------------------
   // A real button per language: the joke is announced when it opens rather
   // than read out unconditionally as a description, and the dashed caption

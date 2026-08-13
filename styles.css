@@ -556,9 +556,11 @@ p{margin:0}
   grid-template-columns:minmax(0,1fr);
   justify-items:start;
   gap:var(--sp-3);
-  max-width:560px;
+  max-width:520px;
 }
-.shots img:nth-of-type(2){max-width:230px}
+/* Both shots are 730x450 now, so they share a width instead of one being
+   capped to phone size. The cap existed only because the login shot used to
+   be portrait; at a matched ratio it just shrank the box below reading size. */
 .shots img{
   display:block;
   width:100%;
@@ -567,6 +569,44 @@ p{margin:0}
   border:1px solid var(--edge);
   border-radius:var(--r-sm);
 }
+/* Script upgrades each shot into a button that opens the lightbox. Two things
+   matter here. z-index lifts it above the card's stretched link (`h3 a::after`
+   covers the whole card), which would otherwise swallow the click and send the
+   visitor to GitHub instead. And the affordance is a persistent corner chip,
+   not just `cursor: zoom-in`, because a cursor tells a touch visitor nothing. */
+button.shot{
+  position:relative;
+  z-index:2;
+  display:block;
+  width:100%;
+  padding:0;
+  border:0;
+  background:transparent;
+  border-radius:var(--r-sm);
+  cursor:zoom-in;
+}
+button.shot img{transition:border-color .18s var(--ease),opacity .18s var(--ease)}
+button.shot:hover img,
+button.shot:focus-visible img{border-color:var(--seam-glow)}
+.shot-zoom{
+  position:absolute;
+  right:.4rem;
+  bottom:.4rem;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:26px;
+  height:26px;
+  border:1px solid var(--edge-strong);
+  border-radius:var(--r-sm);
+  background:rgba(22,24,26,.82);
+  color:var(--smoke);
+  transition:background-color .18s var(--ease),color .18s var(--ease),border-color .18s var(--ease);
+}
+.shot-zoom svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+button.shot:hover .shot-zoom,
+button.shot:focus-visible .shot-zoom{background:var(--seam-glow);border-color:var(--seam-glow);color:var(--coal)}
+
 .shots figcaption{
   grid-column:1/-1;
   margin-top:var(--sp-1);
@@ -581,6 +621,70 @@ p{margin:0}
 @media (max-width:820px){
   .shots{max-width:100%}
 }
+
+/* ---------- Lightbox ---------- */
+/* A real <dialog> opened with showModal(), so the focus trap, the inertness of
+   the page behind it, and Escape-to-close are the browser's job rather than
+   three things to reimplement badly. */
+.lightbox{
+  border:0;
+  padding:0;
+  max-width:min(96vw,1400px);
+  max-height:94vh;
+  overflow:visible;
+  background:transparent;
+  color:var(--smoke);
+}
+.lightbox::backdrop{
+  background:rgba(12,13,15,.88);
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
+}
+.lb-frame{display:flex;flex-direction:column;gap:var(--sp-3)}
+.lb-img{
+  display:block;
+  max-width:100%;
+  /* Bounded by height as well as width: a wide shot on a short window would
+     otherwise overflow the viewport it was opened to fill. */
+  max-height:78vh;
+  width:auto;
+  height:auto;
+  margin-inline:auto;
+  background:#000;
+  border:1px solid var(--edge);
+  border-radius:var(--r-sm);
+}
+.lb-bar{
+  display:flex;
+  align-items:center;
+  gap:var(--sp-4);
+  flex-wrap:wrap;
+}
+.lb-label{font-size:.92rem;color:var(--smoke)}
+.lb-count{font-family:var(--mono);font-size:.8rem;color:var(--ash)}
+.lb-nav{display:flex;gap:var(--sp-2);margin-left:auto}
+button.lb-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:.4rem;
+  min-width:38px;
+  height:38px;
+  padding:0 .7rem;
+  font-family:var(--sans);
+  font-size:.85rem;
+  font-weight:600;
+  color:var(--smoke);
+  background:transparent;
+  border:1px solid var(--edge-strong);
+  border-radius:var(--r-sm);
+  cursor:pointer;
+  transition:background-color .18s var(--ease),color .18s var(--ease),border-color .18s var(--ease);
+}
+button.lb-btn:hover{background:var(--anthracite-2);border-color:var(--seam-glow);color:var(--white)}
+button.lb-btn[disabled]{opacity:.4;cursor:default}
+button.lb-btn[disabled]:hover{background:transparent;border-color:var(--edge-strong);color:var(--smoke)}
+.lb-btn svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 
 /* The feature card earns its doubled width with more evidence, not more air. */
 .project--feature .project-body h3{font-size:1.55rem;letter-spacing:-.02em}
@@ -615,12 +719,12 @@ p{margin:0}
     grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);
     /* Row 1 sizes to the meta block so the link follows it directly instead of
        floating at the midpoint of a body-height row. */
-    grid-template-rows:auto 1fr;
+    grid-template-rows:auto auto auto;
     column-gap:var(--sp-7);
     row-gap:var(--sp-4);
     align-items:start;
   }
-  .project--feature .project-body{grid-column:1;grid-row:1/span 2}
+  .project--feature .project-body{grid-column:1;grid-row:1}
   .project--feature .project-meta{
     grid-column:2;grid-row:1;
     flex-direction:column;
@@ -629,6 +733,17 @@ p{margin:0}
     padding-top:.4rem;
   }
   .project--feature .project-link{grid-column:2;grid-row:2}
+  /* The shots span the whole card and sit side by side. Confined to the prose
+     column they stacked to ~740px of height while the facts rail beside them
+     ended after ~200px, so the card paid for a tall empty gutter. Across the
+     full width each shot gets ~500px, which is both half the height and more
+     legible than 560px stacked. */
+  .project--feature .shots{
+    grid-column:1/-1;
+    grid-row:3;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:var(--sp-4);
+  }
 }
 .project-meta{
   display:flex;
