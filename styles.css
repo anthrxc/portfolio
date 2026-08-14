@@ -73,7 +73,9 @@ html{scroll-behavior:smooth}
    measured and set by script.js; the literal is only the pre-script fallback,
    since hardcoding it silently detuned every anchor when the pill's metrics
    changed. */
-section[id]{scroll-margin-top:calc(var(--nav-h,69px) + var(--sp-5))}
+/* #main is included because the skip link targets it: as a <main>, not a
+   section[id], it was the one anchor on the page that landed under the header. */
+section[id],#main{scroll-margin-top:calc(var(--nav-h,69px) + var(--sp-5))}
 body{
   margin:0;
   background:
@@ -632,13 +634,26 @@ button.shot:focus-visible .shot-zoom{background:var(--seam-glow);border-color:va
   backdrop-filter:blur(6px);
   -webkit-backdrop-filter:blur(6px);
 }
-.lb-frame{display:flex;flex-direction:column;gap:var(--sp-3)}
+/* The chrome owns its ground. Transparent, the label and description sat
+   directly on the dimmed page and read as two layers competing, worst at
+   390px where they overlay live content. Every other overlay in the system
+   has a surface; this one was the exception. */
+.lb-frame{
+  display:flex;
+  flex-direction:column;
+  gap:var(--sp-3);
+  padding:var(--sp-4);
+  background:var(--anthracite);
+  border:1px solid var(--edge);
+  border-radius:var(--r-md);
+}
 .lb-img{
   display:block;
   max-width:100%;
   /* Bounded by height as well as width: a wide shot on a short window would
-     otherwise overflow the viewport it was opened to fill. */
-  max-height:78vh;
+     otherwise overflow the viewport it was opened to fill. Trimmed from 78vh
+     to leave room for the frame's padding and caption block. */
+  max-height:70vh;
   width:auto;
   height:auto;
   margin-inline:auto;
@@ -736,14 +751,14 @@ button.lb-btn[disabled]:hover{background:transparent;border-color:var(--edge-str
     padding-top:.4rem;
   }
   .project--feature .project-link{grid-column:2;grid-row:2}
-  /* The shots span the whole card and sit side by side. Confined to the prose
-     column they stacked to ~740px of height while the facts rail beside them
-     ended after ~200px, so the card paid for a tall empty gutter. Across the
-     full width each shot gets ~500px, which is both half the height and more
-     legible than 560px stacked. */
+  /* Column 1, under the prose, paired. Spanning the full width looked like it
+     used the card better, but the figure is capped at 520px and left-aligned,
+     so the right half of that band was ~490x133px of nothing while the rail
+     above it had already ended. Sitting in column 1 puts the link beside the
+     shots instead of stranding it, and the card gets shorter, not taller. */
   .project--feature .shots{
-    grid-column:1/-1;
-    grid-row:3;
+    grid-column:1;
+    grid-row:2;
     grid-template-columns:repeat(2,minmax(0,1fr));
     gap:var(--sp-4);
   }
@@ -758,6 +773,10 @@ button.lb-btn[disabled]:hover{background:transparent;border-color:var(--edge-str
 }
 .lang{color:var(--ash)}
 .stars{display:inline-flex;align-items:center;gap:.35rem;color:var(--white);font-weight:700}
+/* The count is the value; "stars" is the unit. A glyph and a bare number told
+   the non-technical reader nothing, and the note that once explained it was
+   removed for being jargon, which left the jargon and deleted the gloss. */
+.stars-label{color:var(--ash);font-weight:400}
 .stars[hidden]{display:none}
 .i-star{width:13px;height:13px;color:var(--seam-glow)}
 .project-link{

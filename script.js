@@ -5,7 +5,11 @@
   // stack captions advertise an easter egg that can't open.
   document.documentElement.classList.add("js");
 
-  document.getElementById("yr").textContent = new Date().getFullYear();
+  // Guarded: unguarded at the top of the IIFE, a missing #yr threw and took
+  // every feature below it down with it (meter, stars, nav indicator, copy,
+  // lightbox, jokes) for the sake of a footer year.
+  var yr = document.getElementById("yr");
+  if (yr) yr.textContent = new Date().getFullYear();
 
   // Segment colours are read off the design tokens so the bar can never drift
   // from the palette the rest of the page uses.
