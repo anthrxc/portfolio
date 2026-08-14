@@ -870,12 +870,17 @@ button.lb-btn[disabled]:hover{background:transparent;border-color:var(--edge-str
    how long until they hear back. One sentence each, no card, no icon row. */
 /* Smoke, not ash: this is the highest-stakes sentence on the surface, and set
    in muted grey it was dimmer than the reassurance line beneath it. */
-.contact-process{
+/* Read as one block: what happens, then what it costs and when. Split into
+   two paragraphs so each answers one question, tightened between them so they
+   do not read as unrelated statements. */
+.contact-process,
+.contact-terms{
   max-width:62ch;
   font-size:.98rem;
   color:var(--smoke);
-  margin-bottom:var(--sp-3);
 }
+.contact-process{margin-bottom:var(--sp-2)}
+.contact-terms{margin-bottom:var(--sp-3)}
 /* Above the buttons and at body weight, not a footnote under them. The address
    and the reply time are the only two concrete promises on the page, and the
    address is the recovery path for a visitor whose mailto: opens nothing;
