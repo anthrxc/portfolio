@@ -321,7 +321,10 @@ p{margin:0}
 .btn-ghost:hover{background:var(--seam-wash);border-color:var(--seam-glow);color:var(--white)}
 .btn-ghost:focus-visible{outline-color:var(--white)}
 
-.foot{margin-top:var(--sp-8)}
+/* The rule belongs to the footer, not to its inner column. On .foot-in it
+   inherited the gutter and stopped short of the viewport edge, which the main
+   site already fixed; this keeps the two pages consistent. */
+.foot{margin-top:var(--sp-8);border-top:1px solid var(--edge)}
 .foot-in{
   display:flex;
   justify-content:space-between;
@@ -329,7 +332,6 @@ p{margin:0}
   gap:var(--sp-5);
   flex-wrap:wrap;
   padding-block:var(--sp-5);
-  border-top:1px solid var(--edge);
   font-size:.85rem;
   color:var(--ash);
 }
