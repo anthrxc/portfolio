@@ -647,6 +647,7 @@ button.shot:focus-visible .shot-zoom{background:var(--seam-glow);border-color:va
   border:1px solid var(--edge);
   border-radius:var(--r-md);
 }
+.lb-stage{display:flex;justify-content:center;min-width:0}
 .lb-img{
   display:block;
   max-width:100%;
@@ -703,6 +704,26 @@ button.lb-btn:hover{background:var(--anthracite-2);border-color:var(--seam-glow)
 button.lb-btn[disabled]{opacity:.4;cursor:default}
 button.lb-btn[disabled]:hover{background:transparent;border-color:var(--edge-strong);color:var(--smoke)}
 .lb-btn svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+
+/* Only shown where the stage actually pans, and only with JS, which is the
+   only way the viewer opens at all. */
+.lb-hint{display:none;font-size:.8rem;color:var(--ash)}
+
+/* On a phone, fitting a 730px console log into ~340px is not magnification:
+   it was 1.13x over the thumbnail, so the text stayed unreadable both before
+   and after opening. The image renders at natural size and the stage pans, so
+   the log is legible at native resolution at the cost of a horizontal drag. */
+@media (max-width:640px){
+  .lightbox{max-width:96vw}
+  .lb-stage{
+    overflow:auto;
+    justify-content:flex-start;
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior:contain;
+  }
+  .lb-img{max-width:none;width:auto;max-height:none}
+  .lb-hint{display:block}
+}
 
 /* The feature card earns its doubled width with more evidence, not more air. */
 .project--feature .project-body h3{font-size:1.55rem;letter-spacing:-.02em}

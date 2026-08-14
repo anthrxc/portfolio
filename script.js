@@ -330,8 +330,14 @@
     var frame = document.createElement("div");
     frame.className = "lb-frame";
 
+    // The image gets its own scroll container so a phone can pan a shot at
+    // natural size. Scrolling .lb-frame instead would drag the caption bar
+    // sideways with it.
+    var stage = document.createElement("div");
+    stage.className = "lb-stage";
     var big = document.createElement("img");
     big.className = "lb-img";
+    stage.appendChild(big);
 
     var bar = document.createElement("div");
     bar.className = "lb-bar";
@@ -364,10 +370,17 @@
     nav.appendChild(prevBtn);
     nav.appendChild(nextBtn);
     nav.appendChild(closeBtn);
+    // Says the image pans before the reader wonders why it is cropped. CSS
+    // shows it only at the width where the stage actually scrolls.
+    var hint = document.createElement("p");
+    hint.className = "lb-hint";
+    hint.textContent = "Drag the image sideways to read it.";
+    text.appendChild(hint);
+
     bar.appendChild(text);
     bar.appendChild(count);
     bar.appendChild(nav);
-    frame.appendChild(big);
+    frame.appendChild(stage);
     frame.appendChild(bar);
     dlg.appendChild(frame);
     document.body.appendChild(dlg);
