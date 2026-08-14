@@ -705,24 +705,17 @@ button.lb-btn[disabled]{opacity:.4;cursor:default}
 button.lb-btn[disabled]:hover{background:transparent;border-color:var(--edge-strong);color:var(--smoke)}
 .lb-btn svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 
-/* Only shown where the stage actually pans, and only with JS, which is the
-   only way the viewer opens at all. */
-.lb-hint{display:none;font-size:.8rem;color:var(--ash)}
-
-/* On a phone, fitting a 730px console log into ~340px is not magnification:
-   it was 1.13x over the thumbnail, so the text stayed unreadable both before
-   and after opening. The image renders at natural size and the stage pans, so
-   the log is legible at native resolution at the cost of a horizontal drag. */
+/* Full-bleed on phones, and no bespoke panning. An earlier version scrolled
+   the image at natural size, which solved the wrong problem: a 730px source
+   at 342 CSS px lands on 1026 device pixels at DPR 3, so detail was never the
+   constraint, angular size was. Pinch-zoom is the gesture for that and is not
+   blocked here. Dropping the frame's inline padding buys back the difference
+   that mattered: 1.29x over the thumbnail against 1.13x. */
 @media (max-width:640px){
-  .lightbox{max-width:96vw}
-  .lb-stage{
-    overflow:auto;
-    justify-content:flex-start;
-    -webkit-overflow-scrolling:touch;
-    overscroll-behavior:contain;
-  }
-  .lb-img{max-width:none;width:auto;max-height:none}
-  .lb-hint{display:block}
+  .lightbox{max-width:100vw}
+  .lb-frame{padding:var(--sp-3) 0 var(--sp-4);border-inline:0;border-radius:0}
+  .lb-bar{padding-inline:var(--sp-4)}
+  .lb-img{border-inline:0;border-radius:0}
 }
 
 /* The feature card earns its doubled width with more evidence, not more air. */

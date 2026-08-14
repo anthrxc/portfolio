@@ -370,13 +370,6 @@
     nav.appendChild(prevBtn);
     nav.appendChild(nextBtn);
     nav.appendChild(closeBtn);
-    // Says the image pans before the reader wonders why it is cropped. CSS
-    // shows it only at the width where the stage actually scrolls.
-    var hint = document.createElement("p");
-    hint.className = "lb-hint";
-    hint.textContent = "Drag the image sideways to read it.";
-    text.appendChild(hint);
-
     bar.appendChild(text);
     bar.appendChild(count);
     bar.appendChild(nav);
