@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>anthrxc · archives</title>
+<meta name="description" content="Projects Ivan R (anthrxc) doesn't maintain anymore. Kept on purpose.">
+<meta property="og:title" content="anthrxc · archives">
+<meta property="og:description" content="Projects I don't maintain anymore. Kept on purpose.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://anthrxc.is-a.dev/archives/">
+<meta name="theme-color" content="#16181a">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%201000%201000'%3E%3Crect%20width='1000'%20height='1000'%20rx='220'%20fill='%232C3338'/%3E%3Cg%20transform='translate(210,353.74)%20scale(0.47934)'%3E%3Cg%20transform='translate(11,566)%20scale(1,-1)'%3E%3Cpath%20d='M59%200%20186%20245V263L65%20496H205L297%20314H315L407%20496H546L426%20263V245L553%200H408L315%20194H297L204%200Z'%20fill='%23B27FE0'/%3E%3Cpath%20transform='translate(578,0)'%20d='M61%20-162V-48H551V-162Z'%20fill='%23FFFFFF'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E" type="image/svg+xml">
+<link rel="preload" href="../fonts/archivo-variable-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../fonts/space-mono-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<!--
+THESIS: The archive as a shelf you pull from. Eight retired repos stacked as
+scannable end-labels, each sliding forward to reveal why it's kept. Refuses the
+plain reverse-chron changelog and the year-accordion that hides a small set
+behind clicks.
+OWN-WORLD: Inherits the portfolio's "Played Straight" world verbatim: coal
+ground, anthracite surfaces, edge hairlines, one violet accent on interaction
+and data only, Archivo at normal width, Space Mono for data (year · language ·
+license). Soft-lift is the pull-forward: the opened box lifts off the flat shelf.
+STORY: A visitor understands these are deliberately-kept early/rough projects,
+reads them as honest proof-of-growth, and can open any one for the dry one-liner
+plus a link to the real (archived) repo.
+FIRST VIEWPORT: left-aligned "Archives" headline, one-line premise, then the
+shelf of eight edge-to-edge label rows (name left, year · language right), all
+collapsed, the newest pre-opened so the mechanic is legible immediately.
+FORM: challenger, sneaker-box shelf-pull (textiles-weave-drape-fashion-sneaker-
+box-stacks), fused into the existing world; seed key 3addd990.
+FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md.
+-->
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="nav">
+  <div class="nav-in">
+    <a class="brand" href="/" aria-label="anthrxc, back to the portfolio">
+      <svg class="mark" viewBox="0 0 5198 982" role="img" aria-label="anthrxc">
+        <g transform="translate(-37,760) scale(1,-1)">
+          <path d="M97 130V250L437 341V359L97 450V570L515 454V246Z" fill="#f4f6f7"/>
+          <path transform="translate(578,0)" d="M259 -14Q200 -14 150.0 16.0Q100 46 70.0 103.0Q40 160 40 240V256Q40 335 69.0 392.0Q98 449 146.5 479.5Q195 510 253 510Q306 510 338.5 492.0Q371 474 390 436H408V496H534V150Q534 120 561 120H580V0H494Q460 0 438.5 20.5Q417 41 417 72H399Q380 26 343.5 6.0Q307 -14 259 -14ZM287 106Q342 106 375.0 142.5Q408 179 408 242V254Q408 317 375.0 353.5Q342 390 287 390Q232 390 199.0 353.5Q166 317 166 254V242Q166 179 199.0 142.5Q232 106 287 106Z" fill="#cbd0d4"/>
+          <path transform="translate(1156,0)" d="M78 0V496H204V422H222Q239 464 277.0 487.0Q315 510 366 510Q414 510 453.5 489.5Q493 469 516.5 425.5Q540 382 540 314V0H414V282Q414 335 388.5 365.5Q363 396 315 396Q260 396 232.0 358.5Q204 321 204 258V0Z" fill="#cbd0d4"/>
+          <path transform="translate(1734,0)" d="M288 0Q254 0 232.5 22.0Q211 44 211 78V376H64V496H211V700H337V496H516V376H337V150Q337 120 364 120H498V0Z" fill="#cbd0d4"/>
+          <path transform="translate(2312,0)" d="M80 0V700H206V416H224Q243 461 280.0 485.5Q317 510 371 510Q445 510 493.5 462.0Q542 414 542 312V0H416V282Q416 335 390.5 365.5Q365 396 317 396Q262 396 234.0 358.5Q206 321 206 258V0Z" fill="#cbd0d4"/>
+          <path transform="translate(2890,0)" d="M42 0V120H144V376H54V496H264V424H282Q296 465 330.0 487.5Q364 510 410 510Q484 510 529.0 463.5Q574 417 574 322V300L444 288V302Q444 343 423.0 367.5Q402 392 360 392Q318 392 294.0 363.0Q270 334 270 280V120H384V0Z" fill="#cbd0d4"/>
+          <path transform="translate(3468,0)" d="M59 0 186 245V263L65 496H205L297 314H315L407 496H546L426 263V245L553 0H408L315 194H297L204 0Z" fill="#b27fe0"/>
+          <path transform="translate(4046,0)" d="M312 -14Q239 -14 180.0 15.5Q121 45 86.5 101.5Q52 158 52 238V250Q52 330 87.0 388.5Q122 447 181.0 478.5Q240 510 312 510Q416 510 481.0 456.0Q546 402 562 314L438 282Q432 326 400.0 358.0Q368 390 310 390Q256 390 217.0 352.0Q178 314 178 247V241Q178 174 217.0 140.0Q256 106 310 106Q368 106 398.5 135.0Q429 164 438 213L562 182Q546 94 482.0 40.0Q418 -14 312 -14Z" fill="#cbd0d4"/>
+          <path transform="translate(4624,0)" d="M61 -162V-48H551V-162Z" fill="#f4f6f7"/>
+        </g>
+      </svg>
+    </a>
+    <a class="nav-cta" href="/">Back to portfolio</a>
+  </div>
+</header>
+
+<main id="main">
+
+<section class="hero">
+  <div class="section-in">
+    <h1>Archives</h1>
+    <p class="lede">
+      Old projects I don't maintain anymore, mostly from when I was first learning to code.
+      Kept on purpose, not hidden. <strong>Feel free to make fun of the code.</strong>
+    </p>
+  </div>
+</section>
+
+<section class="shelf-sec" aria-labelledby="shelf-h">
+  <div class="section-in">
+    <h2 class="visually-hidden" id="shelf-h">Archived projects</h2>
+    <ul class="shelf">
+
+      <li class="box">
+        <button class="box-label" aria-expanded="true" aria-controls="box-bookofcodex">
+          <span class="box-name">bookofcodex</span>
+          <span class="box-tags"><span class="box-year">2025</span><span class="box-lang">JavaScript</span></span>
+          <svg class="box-chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="box-panel" id="box-bookofcodex">
+          <div class="box-panel-in">
+            <p>A <em>Book of Ra</em>–style slot game, coded end to end by ChatGPT Codex. I mostly watched.</p>
+            <div class="box-foot">
+              <span class="box-license">MIT</span>
+              <a class="box-link" href="https://github.com/anthrxc-archives/bookofcodex" rel="noopener">
+                View on GitHub
+                <svg class="i-arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8 3l5 5-5 5" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </li>
+
+      <li class="box">
+        <button class="box-label" aria-expanded="false" aria-controls="box-passman">
+          <span class="box-name">passman-cli</span>
+          <span class="box-tags"><span class="box-year">2023</span><span class="box-lang">JavaScript</span></span>
+          <svg class="box-chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="box-panel" id="box-passman">
+          <div class="box-panel-in">
+            <p>A command-line password manager, if you're generous about the word "manager." The security was <em>non-existent</em>. Please don't use it.</p>
+            <div class="box-foot">
+              <span class="box-license">MIT</span>
+              <a class="box-link" href="https://github.com/anthrxc-archives/passman-cli" rel="noopener">
+                View on GitHub
+                <svg class="i-arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8 3l5 5-5 5" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </li>
+
+      <li class="box">
+        <button class="box-label" aria-expanded="false" aria-controls="box-v13">
+          <span class="box-name">v13-template</span>
+          <span class="box-tags"><span class="box-year">2022</span><span class="box-lang">JavaScript</span></span>
+          <svg class="box-chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="box-panel" id="box-v13">
+          <div class="box-panel-in">
+            <p>The same template, one Discord API version later. There's a v14 still standing, and it learned from these two.</p>
+            <div class="box-foot">
+              <span class="box-license">GPL-3.0</span>
+              <a class="box-link" href="https://github.com/anthrxc-archives/v13-template" rel="noopener">
+                View on GitHub
+                <svg class="i-arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8 3l5 5-5 5" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </li>
+
+      <li class="box">
+        <button class="box-label" aria-expanded="false" aria-controls="box-pyxis">
+          <span class="box-name">pyxis</span>
+          <span class="box-tags"><span class="box-year">2021</span><span class="box-lang">JavaScript</span></span>
+          <svg class="box-chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="box-panel" id="box-pyxis">
+          <div class="box-panel-in">
+            <p>My take on a general-purpose bot, with aspirations to cover the entire Discord API. Aspirations.</p>
+            <div class="box-foot">
+              <span class="box-license">MIT</span>
+              <a class="box-link" href="https://github.com/anthrxc-archives/pyxis" rel="noopener">
+                View on GitHub
+                <svg class="i-arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8 3l5 5-5 5" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </li>
+
+      <li class="box">
+        <button class="box-label" aria-expanded="false" aria-controls="box-reaperbot">
+          <span class="box-name">reaperbot</span>
+          <span class="box-tags"><span class="box-year">2021</span><span class="box-lang">Python</span></span>
+          <svg class="box-chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="box-panel" id="box-reaperbot">
+          <div class="box-panel-in">
+            <p>My first programming project. One Python file, a surprising number of commands, and no idea what I was doing. Published about eight months after I wrote it, so it's older than this shelf suggests.</p>
+            <div class="box-foot">
+              <span class="box-license box-license--note">the first one</span>
+              <a class="box-link" href="https://github.com/anthrxc-archives/reaperbot" rel="noopener">
+                View on GitHub
+                <svg class="i-arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8 3l5 5-5 5" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </li>
+
+      <li class="box">
+        <button class="box-label" aria-expanded="false" aria-controls="box-v12">
+          <span class="box-name">v12-template</span>
+          <span class="box-tags"><span class="box-year">2021</span><span class="box-lang">JavaScript</span></span>
+          <svg class="box-chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="box-panel" id="box-v12">
+          <div class="box-panel-in">
+            <p>Where the template habit started: boilerplate for a discord.js v12 bot, so I'd stop writing it from scratch.</p>
+            <div class="box-foot">
+              <span class="box-license">GPL-3.0</span>
+              <a class="box-link" href="https://github.com/anthrxc-archives/v12-template" rel="noopener">
+                View on GitHub
+                <svg class="i-arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8 3l5 5-5 5" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </li>
+
+      <li class="box">
+        <button class="box-label" aria-expanded="false" aria-controls="box-sinewave">
+          <span class="box-name">sinewave</span>
+          <span class="box-tags"><span class="box-year">2021</span><span class="box-lang">JavaScript</span></span>
+          <svg class="box-chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="box-panel" id="box-sinewave">
+          <div class="box-panel-in">
+            <p>Ten minutes of work. Joins your voice channel when mentioned and plays a 6300&nbsp;Hz sine wave for thirty seconds. Inspired by the Rick Astley and Do the Mario bots, and every bit as welcome.</p>
+            <div class="box-foot">
+              <span class="box-license">Apache-2.0</span>
+              <a class="box-link" href="https://github.com/anthrxc-archives/sinewave" rel="noopener">
+                View on GitHub
+                <svg class="i-arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8 3l5 5-5 5" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </li>
+
+      <li class="box">
+        <button class="box-label" aria-expanded="false" aria-controls="box-personal">
+          <span class="box-name">personal-website</span>
+          <span class="box-tags"><span class="box-year">2021</span><span class="box-lang">HTML</span></span>
+          <svg class="box-chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="box-panel" id="box-personal">
+          <div class="box-panel-in">
+            <p>First take on a website. As far as I remember it was pretty good, right up until I decided to redesign it. A habit I have not shaken.</p>
+            <div class="box-foot">
+              <span class="box-license">MPL-2.0</span>
+              <a class="box-link" href="https://github.com/anthrxc-archives/personal-website" rel="noopener">
+                View on GitHub
+                <svg class="i-arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8 3l5 5-5 5" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </li>
+
+    </ul>
+  </div>
+</section>
+
+<section class="why" id="why">
+  <div class="section-in">
+    <h2>Why any of this is still here</h2>
+    <p class="why-copy">
+      They're proof that someone with no knowledge of programming can, with enough
+      determination, make whatever their heart desires come to life. The code is bad.
+      It was supposed to be.
+    </p>
+    <div class="cta-row">
+      <a class="btn btn-ghost" href="https://github.com/anthrxc-archives" rel="noopener">The whole archive</a>
+    </div>
+  </div>
+  <div class="foot">
+    <div class="section-in foot-in">
+      <span>anthrxc.is-a.dev · read-only · 8 finds</span>
+      <span>© <span id="yr">2026</span> Ivan R</span>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>

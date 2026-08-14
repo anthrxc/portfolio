@@ -1,179 +1,979 @@
-:root {
-    --coal: #16181a;
-    --anthracite: #23282c;
-    --ash: #6f767d;
-    --smoke: #cbd0d4;
-    --white: #f4f6f7;
-    --seam: #8844a8;
-    --seam-glow: #b27fe0;
+@font-face{
+  font-family:"Archivo";
+  font-style:normal;
+  font-weight:400 900;
+  font-stretch:75% 100%;
+  font-display:swap;
+  src:url("fonts/archivo-variable-latin.woff2") format("woff2");
+}
+@font-face{
+  font-family:"Space Mono";
+  font-style:normal;
+  font-weight:400;
+  font-display:swap;
+  src:url("fonts/space-mono-400-latin.woff2") format("woff2");
+}
+@font-face{
+  font-family:"Space Mono";
+  font-style:normal;
+  font-weight:700;
+  font-display:swap;
+  src:url("fonts/space-mono-700-latin.woff2") format("woff2");
 }
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0
+:root{
+  --coal:#16181a;
+  --anthracite:#23282c;
+  --anthracite-2:#2c3338;
+  --edge:#373f45;
+  /* Interactive-control borders need 3:1 against coal to satisfy WCAG 1.4.11;
+     --edge is 1.66:1 and stays the hairline for dividers and card edges only. */
+  --edge-strong:#5d676f;
+  --ash:#93999d;
+  --smoke:#cbd0d4;
+  --white:#f4f6f7;
+  --anthracite-3:#333a40;
+  --seam:#8844a8;
+  --seam-glow:#b27fe0;
+  /* Lifted accent for text sitting on the raised card surface, where
+     seam-glow drops to 4.28:1. */
+  --seam-lift:#c9a3e8;
+  --seam-wash:rgba(178,127,224,.16);
+
+  --r-sm:6px;
+  --r-md:14px;
+
+  --sans:"Archivo",system-ui,sans-serif;
+  --mono:"Space Mono",ui-monospace,monospace;
+
+  --gut:clamp(1.25rem,5vw,4.5rem);
+  --maxw:1180px;
+
+  --sp-1:.25rem;
+  --sp-2:.5rem;
+  --sp-3:.75rem;
+  --sp-4:1rem;
+  --sp-5:1.5rem;
+  --sp-6:2rem;
+  --sp-7:3rem;
+  --sp-8:5rem;
+
+  --ease:cubic-bezier(0,0,.2,1);
+
+  /* Dark-mode elevation reads from lighter surfaces and a light top ring, not
+     from black shadows; on coal those are perceptually zero. The drop shadow
+     stays as a faint grounding cue; the ring and the surface do the work. */
+  --shadow-rest:0 1px 0 rgba(0,0,0,.2);
+  --shadow-lift:inset 0 1px 0 rgba(244,246,247,.07),0 12px 28px -8px rgba(0,0,0,.55);
 }
 
-html,
-body {
-    height: 100%
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+/* Anchor jumps otherwise land headings under the sticky header. --nav-h is
+   measured and set by script.js; the literal is only the pre-script fallback,
+   since hardcoding it silently detuned every anchor when the pill's metrics
+   changed. */
+/* #main is included because the skip link targets it: as a <main>, not a
+   section[id], it was the one anchor on the page that landed under the header. */
+section[id],#main{scroll-margin-top:calc(var(--nav-h,69px) + var(--sp-5))}
+body{
+  margin:0;
+  background:
+    radial-gradient(ellipse 1100px 560px at 50% -8%, rgba(178,127,224,.07), transparent 62%),
+    radial-gradient(circle at 1px 1px, rgba(244,246,247,.04) 1px, transparent 0) 0 0/26px 26px,
+    var(--coal);
+  color:var(--smoke);
+  font-family:var(--sans);
+  font-size:clamp(1rem,.96rem + .15vw,1.05rem);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+a{color:inherit}
+svg{display:block}
+h1,h2,h3{font-family:var(--sans);color:var(--white);margin:0}
+p{margin:0}
+
+/* No border-radius here: every control that needed one already sets its own at
+   equal specificity later in the file, so the rule only ever applied to
+   elements it had no business rounding. Outlines follow the element's radius. */
+:focus-visible{
+  outline:2px solid var(--seam-glow);
+  outline-offset:3px;
 }
 
-body {
-    background: var(--coal);
-    color: var(--smoke);
-    font-family: 'Space Mono', monospace;
-    -webkit-font-smoothing: antialiased;
-    min-height: 100dvh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    position: relative;
-    padding: 24px;
+.skip-link{
+  position:absolute;
+  left:var(--sp-4);
+  top:-3rem;
+  z-index:200;
+  background:var(--white);
+  color:var(--coal);
+  font-weight:700;
+  font-size:.85rem;
+  padding:.6rem 1rem;
+  border-radius:var(--r-sm);
+  transition:top .18s var(--ease);
+}
+.skip-link:focus{top:var(--sp-4)}
+
+.visually-hidden{
+  position:absolute;
+  width:1px;height:1px;
+  padding:0;margin:-1px;
+  overflow:hidden;
+  clip:rect(0,0,0,0);
+  white-space:nowrap;
+  border:0;
 }
 
-/* ambient bloom + faint grid */
-body::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(60% 50% at 50% 42%, rgba(178, 127, 224, .10), transparent 70%);
-    pointer-events: none
+.section-in{
+  max-width:var(--maxw);
+  margin-inline:auto;
+  padding-inline:var(--gut);
 }
 
-body::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    opacity: .4;
-    pointer-events: none;
-    background-image:
-        linear-gradient(rgba(255, 255, 255, .018) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, .018) 1px, transparent 1px);
-    background-size: 42px 42px;
-    mask-image: radial-gradient(70% 70% at 50% 50%, #000, transparent 80%);
-    -webkit-mask-image: radial-gradient(70% 70% at 50% 50%, #000, transparent 80%)
+/* ---------- Nav ---------- */
+.nav{
+  position:sticky;
+  top:0;
+  z-index:50;
+  background:rgba(22,24,26,.78);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--edge);
+}
+.nav-in{
+  max-width:var(--maxw);
+  margin-inline:auto;
+  padding:.85rem var(--gut);
+  display:flex;
+  align-items:center;
+  gap:var(--sp-6);
+}
+.brand{display:flex;align-items:center;line-height:0;flex:none;border-radius:var(--r-sm);padding-block:.5rem}
+.brand .mark{height:18px;width:auto;transition:opacity .18s var(--ease)}
+.brand:hover .mark{opacity:.75}
+
+.nav-links{
+  display:flex;
+  align-items:center;
+  gap:var(--sp-6);
+  margin-left:auto;
+}
+.nav-links a{
+  position:relative;
+  font-size:.92rem;
+  color:var(--ash);
+  text-decoration:none;
+  /* Clears the 24px minimum target size of WCAG 2.2 SC 2.5.8. */
+  padding-block:.35rem;
+  transition:color .18s var(--ease);
+}
+.nav-links a:hover{color:var(--white)}
+
+/* Current section. The rule is a state, not decoration, so violet is in scope
+   under the Interactive-Only Rule, and colour is never the only signal, since
+   aria-current carries it for anyone not seeing the bar. */
+.nav-links a[aria-current]{color:var(--white)}
+.nav-links a:not(.nav-cta)[aria-current]::after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:-2px;
+  height:2px;
+  background:var(--seam-glow);
+}
+.nav-links a.nav-cta[aria-current]{border-color:var(--seam-glow)}
+
+/* Scoped to .nav-links so it outranks `.nav-links a` (0,1,1); as a bare
+   `.nav-cta` (0,1,0) the pill silently inherited ash text at 4.4:1. */
+.nav-links a.nav-cta{
+  font-size:.88rem;
+  font-weight:600;
+  text-decoration:none;
+  color:var(--white);
+  background:var(--anthracite-2);
+  border:1px solid var(--edge-strong);
+  border-radius:var(--r-sm);
+  padding:.5rem 1rem;
+  transition:background-color .18s var(--ease),border-color .18s var(--ease);
+}
+.nav-links a.nav-cta:hover{border-color:var(--seam-glow);color:var(--white)}
+
+/* Progressive trim: drop the least-load-bearing link before the row crowds,
+   so the remaining targets keep their spacing instead of shrinking. Only the
+   Beyond link trims now; the Archives rule went with the link itself, since
+   every remaining item is an in-page anchor the nav cannot do without. */
+@media (max-width:640px){
+  .nav-in{padding-inline:var(--sp-3)}
+  .nav-links{gap:var(--sp-3);margin-left:auto}
+  /* Taller block padding on touch: the 33px target that the desktop .35rem
+     produced clears SC 2.5.8's 24px but sits well under a thumb's comfortable
+     reach, and this row is the page's only persistent navigation. */
+  .nav-links a{font-size:.85rem;padding-block:.6rem}
+}
+@media (max-width:380px){
+  .nav-tertiary{display:none}
 }
 
-.stage {
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    max-width: 560px;
-    text-align: center
+
+/* ---------- Hero ---------- */
+.hero{padding-block:clamp(4rem,10vw,6.5rem) clamp(2.5rem,6vw,4rem)}
+/* The proposition takes the display slot, not the name: a visitor deciding
+   whether to hire has never heard the name, and the wordmark already carries
+   identity in the header. The name moves into the lede rather than sitting
+   above the heading as a kicker. */
+/* Weight 700 at 3rem, not 800 at 3.75rem: the proposition-first decision is
+   sound, but set at maximum weight and tightest tracking it filled the first
+   viewport and read as a shout rather than a statement. The volume was the
+   problem, not the sentence. */
+.hero h1{
+  max-width:28ch;
+  font-weight:700;
+  font-stretch:100%;
+  font-size:clamp(1.9rem,3.4vw,2.9rem);
+  line-height:1.1;
+  letter-spacing:-.02em;
+  /* Without this the sentence stranded "off." alone on a third line at 390px.
+     Progressive enhancement: unsupported browsers just get normal wrapping. */
+  text-wrap:balance;
+  margin:0 0 var(--sp-4);
+}
+.lede{
+  max-width:68ch;
+  font-size:clamp(1.05rem,1.5vw,1.2rem);
+  color:var(--smoke);
+  margin:0 0 var(--sp-6);
+}
+.lede strong{color:var(--white);font-weight:600}
+
+.cta-row{display:flex;gap:.75rem;flex-wrap:wrap}
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:.5rem;
+  font-family:var(--sans);
+  font-size:.92rem;
+  font-weight:600;
+  text-decoration:none;
+  padding:.7rem 1.25rem;
+  border:1px solid var(--edge-strong);
+  border-radius:var(--r-sm);
+  color:var(--smoke);
+  background:transparent;
+  transition:background-color .18s var(--ease),color .18s var(--ease),border-color .18s var(--ease),transform .18s var(--ease);
+}
+/* seam on the hovered fill is 2.10:1 and fails 1.4.11 for a state change,
+   the same defect already fixed on cards. seam-glow is 4.28:1. */
+.btn:hover{border-color:var(--seam-glow);background:var(--anthracite-2);color:var(--white)}
+.btn:active{transform:translateY(1px)}
+.btn-ghost{border-color:var(--seam-glow);color:var(--seam-glow)}
+/* A tint, not a solid fill: filling with seam-glow made the hovered ghost
+   button identical to the primary button's resting state. */
+.btn-ghost:hover{background:var(--seam-wash);border-color:var(--seam-glow);color:var(--white)}
+.btn-primary{background:var(--seam-glow);border-color:var(--seam-glow);color:var(--coal)}
+.btn-primary:hover{background:var(--white);border-color:var(--white);color:var(--coal)}
+.i-btn{width:17px;height:17px;flex:none;fill:currentColor}
+.i-btn-arrow{fill:none;transition:transform .18s var(--ease)}
+.btn-primary:hover .i-btn-arrow{transform:translateX(4px)}
+/* Both violet controls already wear seam-glow at rest (as a border on the
+   ghost, as a fill on the primary), so a seam-glow focus ring reads as a faint
+   double edge rather than a state change. */
+.btn-ghost:focus-visible,
+.btn-primary:focus-visible{outline-color:var(--white)}
+
+/* ---------- Stack ---------- */
+.stack{padding-block:var(--sp-6);border-bottom:1px solid var(--edge)}
+/* Visible, not screen-reader-only. Hidden, the section handed the reader five
+   unlabelled logos and a meter with no statement of what either was for, and
+   proximity made the meter's caption read as the logo row's label. */
+.stack-h{
+  font-size:1.02rem;
+  font-weight:700;
+  letter-spacing:-.01em;
+  margin-bottom:var(--sp-5);
+}
+/* Grid, not flex: the row spreads across the full content column so it shares
+   the meter's right edge, and equal tracks keep a wrapped final row aligned
+   with the one above it. Flex space-between flung the last two items 215px
+   apart once the row broke. */
+.stack-list{
+  list-style:none;
+  display:grid;
+  /* Explicit tracks, not auto-fit: there are exactly five items, and the only
+     tidy arrangements are 5 or 3+2. auto-fit happily produced 4 plus a lone
+     orphan at tablet widths. */
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:var(--sp-5) var(--sp-4);
+  margin:0;padding:0;
+  color:var(--ash);
+}
+/* Must follow .stack-list: a media query adds no specificity, so declaring
+   this earlier in the file let the 5-track rule win at every width. */
+@media (max-width:640px){
+  .stack-list{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+/* At the narrowest supported width the three tracks get tight enough to break
+   "HTML / CSS" over two lines; a smaller column gap buys back the room. */
+@media (max-width:380px){
+  .stack-list{column-gap:var(--sp-2)}
+}
+/* justify-self shrinks the slot to its button, which also keeps the tooltip's
+   left:50% centred on the icon rather than on an empty stretched cell.
+   Wrapped rows align to the page spine; centring there only inset the first
+   icon from the left edge everything else shares. */
+.stack-slot{position:relative;justify-self:start}
+/* On a single row the outer two reach the band's edges and the rest space out
+   between them, so the row spans the full width instead of each icon hugging
+   the left of its own cell. */
+@media (min-width:641px){
+  .stack-slot{justify-self:center}
+  .stack-slot:first-child{justify-self:start}
+  .stack-slot:last-child{justify-self:end}
+}
+.stack-item{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:.55rem;
+  padding:.35rem .5rem .5rem;
+  border:0;
+  border-radius:var(--r-sm);
+  background:transparent;
+  font-family:inherit;
+  color:var(--ash);
+  cursor:default;
+  transition:color .18s var(--ease);
+}
+.js .stack-item{cursor:pointer}
+.i-tech{width:2.125rem;height:2.125rem;flex:none;fill:var(--ash);transition:fill .18s var(--ease)}
+/* The dashed rule is the affordance: without it the jokes are only findable by
+   accident, which puts the page's only real personality behind a blind hover. */
+.stack-cap{
+  font-size:.8rem;
+  line-height:1;
+  letter-spacing:-.01em;
+  color:inherit;
+  border-bottom:1px dashed transparent;
+  padding-bottom:.25rem;
+  transition:border-color .18s var(--ease);
+}
+/* Only promise the easter egg when the script that delivers it is running. */
+.js .stack-cap{border-bottom-color:var(--edge-strong)}
+.stack-item:hover .stack-cap,
+.stack-item[aria-expanded="true"] .stack-cap{border-bottom-color:var(--seam-glow)}
+
+/* Easter egg: a dry one-liner per language, revealed on hover, keyboard focus,
+   or tap. Hidden with display:none so a closed bubble never widens the page;
+   script.js sets --joke-shift to keep the open bubble inside the viewport. */
+.stack-joke{
+  position:absolute;
+  left:50%;
+  bottom:calc(100% + 10px);
+  /* Above the sticky header (z-index 50): the stack row sits ~480px down, so
+     at an ordinary scroll position the bubble opened behind the blurred nav. */
+  z-index:60;
+  display:none;
+  width:max-content;
+  max-width:min(260px,calc(100vw - 2rem));
+  padding:.55rem .7rem;
+  background:var(--anthracite-2);
+  border:1px solid var(--edge);
+  border-radius:var(--r-sm);
+  box-shadow:var(--shadow-lift);
+  color:var(--smoke);
+  font-size:.82rem;
+  line-height:1.45;
+  text-align:left;
+  transform:translateX(calc(-50% + var(--joke-shift,0px)));
+}
+.stack-item[aria-expanded="true"] + .stack-joke{
+  display:block;
+  animation:jokeIn .18s var(--ease) both;
+}
+@keyframes jokeIn{
+  from{opacity:0;transform:translate(calc(-50% + var(--joke-shift,0px)),4px)}
+  to{opacity:1;transform:translate(calc(-50% + var(--joke-shift,0px)),0)}
+}
+.stack-joke::after{
+  content:"";
+  position:absolute;
+  top:100%;
+  left:calc(50% - var(--joke-shift,0px));
+  transform:translateX(-50%);
+  border:6px solid transparent;
+  border-top-color:var(--anthracite-2);
+}
+/* Mono is reserved for real values (the float literal), never for prose. */
+.stack-joke code{font-family:var(--mono);font-size:.9em;color:var(--smoke)}
+.stack-joke strong{color:var(--white);font-weight:700}
+
+.stack-item[aria-expanded="true"]{color:var(--white)}
+.stack-item[aria-expanded="true"] .i-tech,
+.stack-item:hover .i-tech,
+.stack-item:focus-visible .i-tech{fill:var(--seam-glow)}
+@media (prefers-reduced-motion:reduce){
+  .stack-item[aria-expanded="true"] + .stack-joke{animation:none}
 }
 
-.mark {
-    width: min(420px, 72vw);
-    height: auto;
-    display: block;
-    margin: 0 auto 44px;
-    animation: rise .9s cubic-bezier(.2, .7, .2, 1) both
+/* The band shares the page spine. Every other element on the page starts at
+   the same left edge; a centred island here broke it at the exact point a
+   visitor decides whether to keep scrolling. og.png already does it this way. */
+/* Full content width, like the project grid and every section heading. The
+   band shares the page's left edge AND its right edge; capping it at 560
+   stranded a 476px void beside a meter that is supposed to read as 100%. */
+/* Separated from the icon row by a rule and a full step of space, so the meter
+   reads as its own measurement rather than as proof of the claim above it. */
+.lang-mix{
+  margin:var(--sp-6) 0 0;
+  padding-top:var(--sp-5);
+  border-top:1px solid var(--edge);
+}
+/* Scopes its own measurement. The row above claims what I work in; this claims
+   only what is public and how much of it there is. Without the second sentence
+   the adjacency read as an audit of the row, and two languages in that row have
+   no public bytes to show. */
+.lang-cap{
+  max-width:62ch;
+  font-size:.8rem;
+  color:var(--ash);
+  margin-bottom:var(--sp-3);
+}
+.lang-bar{display:flex;gap:2px;height:6px;border-radius:3px;overflow:hidden;margin-bottom:var(--sp-3)}
+.lang-bar span{flex-basis:0}
+.lang-key{
+  font-family:var(--mono);
+  font-size:.8rem;
+  color:var(--ash);
+  display:flex;
+  flex-wrap:wrap;
+  gap:var(--sp-2) var(--sp-5);
+}
+.lang-key span{display:inline-flex;align-items:center;gap:.45rem}
+/* Swatches carry the segment→label mapping, so reading the meter never depends
+   on remembering left-to-right order or on telling two adjacent hues apart. */
+.lang-key i{
+  width:.55rem;
+  height:.55rem;
+  flex:none;
+  border-radius:2px;
+  background:currentColor;
+}
+.lang-key b{color:var(--white);font-weight:700}
+
+/* ---------- Sections (shared) ---------- */
+.projects,.beyond{padding-block:clamp(3rem,7vw,5rem)}
+.projects h2,.beyond h2{
+  font-size:clamp(1.6rem,3vw,2.1rem);
+  font-weight:700;
+  letter-spacing:-.015em;
+  margin-bottom:var(--sp-6);
 }
 
-@keyframes rise {
-    from {
-        opacity: 0;
-        transform: translateY(14px)
-    }
-
-    to {
-        opacity: 1;
-        transform: none
-    }
+/* ---------- Projects ---------- */
+.project-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:var(--sp-4);
+}
+.project{
+  position:relative;
+  grid-column:span 1;
+  display:flex;
+  flex-direction:column;
+  gap:var(--sp-4);
+  background:var(--anthracite);
+  border:1px solid var(--edge);
+  border-radius:var(--r-md);
+  padding:var(--sp-5);
+  box-shadow:var(--shadow-rest);
+  transition:border-color .2s var(--ease),transform .2s var(--ease),box-shadow .2s var(--ease);
+}
+.project:hover,.project:focus-within{
+  background:var(--anthracite-3);
+  border-color:var(--seam-glow);
+  transform:translateY(-3px);
+  box-shadow:var(--shadow-lift);
+}
+/* Text is lifted with the surface, so every hover pair reads better than at
+   rest rather than worse: description 7.42:1, title and link 5.43:1. */
+.project:hover .project-body p,
+.project:focus-within .project-body p{color:var(--smoke)}
+.project:hover .project-body h3 a,
+.project:focus-within .project-body h3 a,
+.project:hover .project-link,
+.project:focus-within .project-link{color:var(--seam-lift)}
+/* The facts rail lifts too. Left on --ash it dropped to 4.00:1 on the raised
+   surface, and "Updated <month>" is the item a client actually reads. Chip
+   borders take --ash rather than --edge-strong, which measures 2.00:1 there. */
+.project:hover .project-meta,
+.project:focus-within .project-meta{color:var(--smoke)}
+.project:hover .lang,
+.project:focus-within .lang,
+.project:hover .project-license,
+.project:focus-within .project-license,
+.project:hover .project-updated,
+.project:focus-within .project-updated{color:var(--smoke)}
+.project:hover .project-tech li,
+.project:focus-within .project-tech li{color:var(--smoke);border-color:var(--ash)}
+.project--feature{grid-column:span 2}
+.project-body h3{font-size:1.25rem;font-weight:700;letter-spacing:-.01em}
+.project-body h3 a{text-decoration:none}
+.project-body h3 a:hover{color:var(--seam-lift)}
+/* The whole card is the target. One anchor owns it, so the card stops looking
+   clickable while only two small text links actually are, and screen readers
+   get one tab stop per project instead of two to the same URL. */
+.project-body h3 a::after{content:"";position:absolute;inset:0;border-radius:var(--r-md)}
+.project-body p{
+  margin-top:var(--sp-2);
+  max-width:66ch;
+  font-size:.95rem;
+  color:var(--ash);
+}
+.project-note{
+  margin-top:var(--sp-3);
+  max-width:60ch;
+  font-size:.92rem;
+  color:var(--smoke);
 }
 
-.term {
-    display: inline-block;
-    text-align: left;
-    font-size: clamp(14px, 3.6vw, 18px);
-    line-height: 1.7;
-    animation: fade 1s ease .35s both
+/* The page sells building things, so it has to show one. Width and height are
+   on the <img> so the reserved box is correct before the file lands and the
+   card never reflows under the reader. */
+/* Two shots, because the description makes two claims: a desktop system that
+   detects and tracks, and a mobile interface for watching it remotely. The
+   boot log evidences the first by naming the subsystems; the login screen
+   evidences the second. align-items:start so the shorter image doesn't
+   stretch to match the taller one's aspect. */
+/* Stacked, not side by side. Paired in two columns the boot log rendered at
+   ~300px, where its type is about 5px and the subsystem names it exists to
+   show are unreadable. An illegible screenshot evidences nothing, so the log
+   takes the full prose measure and the login sits under it at phone size. */
+.shots{
+  margin:var(--sp-5) 0 0;
+  display:grid;
+  grid-template-columns:minmax(0,1fr);
+  justify-items:start;
+  gap:var(--sp-3);
+  max-width:520px;
+}
+/* Both shots are 730x450 now, so they share a width instead of one being
+   capped to phone size. The cap existed only because the login shot used to
+   be portrait; at a matched ratio it just shrank the box below reading size. */
+.shots img{
+  display:block;
+  width:100%;
+  height:auto;
+  background:#000;
+  border:1px solid var(--edge);
+  border-radius:var(--r-sm);
+}
+/* Script upgrades each shot into a button that opens the lightbox. Two things
+   matter here. z-index lifts it above the card's stretched link (`h3 a::after`
+   covers the whole card), which would otherwise swallow the click and send the
+   visitor to GitHub instead. And the affordance is a persistent corner chip,
+   not just `cursor: zoom-in`, because a cursor tells a touch visitor nothing. */
+button.shot{
+  position:relative;
+  z-index:2;
+  display:block;
+  width:100%;
+  padding:0;
+  border:0;
+  background:transparent;
+  border-radius:var(--r-sm);
+  cursor:zoom-in;
+}
+button.shot img{transition:border-color .18s var(--ease),opacity .18s var(--ease)}
+button.shot:hover img,
+button.shot:focus-visible img{border-color:var(--seam-glow)}
+.shot-zoom{
+  position:absolute;
+  right:.4rem;
+  bottom:.4rem;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:26px;
+  height:26px;
+  border:1px solid var(--edge-strong);
+  border-radius:var(--r-sm);
+  background:rgba(22,24,26,.82);
+  color:var(--smoke);
+  transition:background-color .18s var(--ease),color .18s var(--ease),border-color .18s var(--ease);
+}
+.shot-zoom svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+button.shot:hover .shot-zoom,
+button.shot:focus-visible .shot-zoom{background:var(--seam-glow);border-color:var(--seam-glow);color:var(--coal)}
+
+/* Below the card's single-column breakpoint the pair would be two thumbnails
+   too small to read a boot log in, so they stack at full width instead. */
+@media (max-width:820px){
+  .shots{max-width:100%}
 }
 
-@keyframes fade {
-    from {
-        opacity: 0
-    }
+/* ---------- Lightbox ---------- */
+/* A real <dialog> opened with showModal(), so the focus trap, the inertness of
+   the page behind it, and Escape-to-close are the browser's job rather than
+   three things to reimplement badly. */
+.lightbox{
+  border:0;
+  padding:0;
+  max-width:min(96vw,1400px);
+  max-height:94vh;
+  overflow:visible;
+  background:transparent;
+  color:var(--smoke);
+}
+.lightbox::backdrop{
+  background:rgba(12,13,15,.88);
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
+}
+/* The chrome owns its ground. Transparent, the label and description sat
+   directly on the dimmed page and read as two layers competing, worst at
+   390px where they overlay live content. Every other overlay in the system
+   has a surface; this one was the exception. */
+.lb-frame{
+  display:flex;
+  flex-direction:column;
+  gap:var(--sp-3);
+  padding:var(--sp-4);
+  background:var(--anthracite);
+  border:1px solid var(--edge);
+  border-radius:var(--r-md);
+}
+.lb-stage{display:flex;justify-content:center;min-width:0}
+.lb-img{
+  display:block;
+  max-width:100%;
+  /* Bounded by height as well as width: a wide shot on a short window would
+     otherwise overflow the viewport it was opened to fill. Trimmed from 78vh
+     to leave room for the frame's padding and caption block. */
+  max-height:70vh;
+  width:auto;
+  height:auto;
+  margin-inline:auto;
+  background:#000;
+  border:1px solid var(--edge);
+  border-radius:var(--r-sm);
+}
+.lb-bar{
+  display:flex;
+  align-items:flex-start;
+  gap:var(--sp-4);
+  flex-wrap:wrap;
+}
+/* The description lives here rather than under the thumbnail: in the card it
+   was explaining images too small to be worth explaining, and it padded a card
+   that was already too tall. At full size the reader is actually looking. */
+.lb-text{flex:1 1 22rem;min-width:0}
+.lb-label{display:block;font-size:.92rem;font-weight:600;color:var(--white)}
+.lb-desc{
+  margin-top:.2rem;
+  max-width:74ch;
+  font-size:.88rem;
+  line-height:1.55;
+  color:var(--ash);
+}
+.lb-count{font-family:var(--mono);font-size:.8rem;color:var(--ash);padding-top:.2rem}
+.lb-nav{display:flex;gap:var(--sp-2);margin-left:auto}
+button.lb-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:.4rem;
+  min-width:38px;
+  height:38px;
+  padding:0 .7rem;
+  font-family:var(--sans);
+  font-size:.85rem;
+  font-weight:600;
+  color:var(--smoke);
+  background:transparent;
+  border:1px solid var(--edge-strong);
+  border-radius:var(--r-sm);
+  cursor:pointer;
+  transition:background-color .18s var(--ease),color .18s var(--ease),border-color .18s var(--ease);
+}
+button.lb-btn:hover{background:var(--anthracite-2);border-color:var(--seam-glow);color:var(--white)}
+button.lb-btn[disabled]{opacity:.4;cursor:default}
+button.lb-btn[disabled]:hover{background:transparent;border-color:var(--edge-strong);color:var(--smoke)}
+.lb-btn svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 
-    to {
-        opacity: 1
-    }
+/* Full-bleed on phones, and no bespoke panning. An earlier version scrolled
+   the image at natural size, which solved the wrong problem: a 730px source
+   at 342 CSS px lands on 1026 device pixels at DPR 3, so detail was never the
+   constraint, angular size was. Pinch-zoom is the gesture for that and is not
+   blocked here. Dropping the frame's inline padding buys back the difference
+   that mattered: 1.29x over the thumbnail against 1.13x. */
+@media (max-width:640px){
+  .lightbox{max-width:100vw}
+  .lb-frame{padding:var(--sp-3) 0 var(--sp-4);border-inline:0;border-radius:0}
+  .lb-bar{padding-inline:var(--sp-4)}
+  .lb-img{border-inline:0;border-radius:0}
 }
 
-.prompt {
-    color: var(--seam-glow)
+/* The feature card earns its doubled width with more evidence, not more air. */
+.project--feature .project-body h3{font-size:1.55rem;letter-spacing:-.02em}
+.project--feature .project-body > p:first-of-type{font-size:1.05rem;color:var(--smoke)}
+.project-tech{
+  display:flex;
+  flex-wrap:wrap;
+  gap:.4rem;
+  list-style:none;
+  margin:0;
+  padding:0;
+}
+.project-tech li{
+  font-family:var(--mono);
+  font-size:.8rem;
+  color:var(--ash);
+  border:1px solid var(--edge);
+  border-radius:var(--r-sm);
+  padding:.2rem .5rem;
+}
+.project-license{color:var(--ash)}
+.project-updated{color:var(--ash)}
+/* The chips already list every language, so the single-language meta slot
+   would just repeat the first one. */
+.project--feature .lang{display:none}
+
+/* At full width the feature card splits: prose left at a readable measure,
+   the facts rail right, instead of one column of text and 500px of nothing. */
+@media (min-width:821px){
+  .project--feature{
+    display:grid;
+    grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);
+    /* Row 1 sizes to the meta block so the link follows it directly instead of
+       floating at the midpoint of a body-height row. */
+    grid-template-rows:auto auto auto;
+    column-gap:var(--sp-7);
+    row-gap:var(--sp-4);
+    align-items:start;
+  }
+  .project--feature .project-body{grid-column:1;grid-row:1}
+  .project--feature .project-meta{
+    grid-column:2;grid-row:1;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:var(--sp-3);
+    padding-top:.4rem;
+  }
+  .project--feature .project-link{grid-column:2;grid-row:2}
+  /* Column 1, under the prose, paired. Spanning the full width looked like it
+     used the card better, but the figure is capped at 520px and left-aligned,
+     so the right half of that band was ~490x133px of nothing while the rail
+     above it had already ended. Sitting in column 1 puts the link beside the
+     shots instead of stranding it, and the card gets shorter, not taller. */
+  .project--feature .shots{
+    grid-column:1;
+    grid-row:2;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:var(--sp-4);
+  }
+}
+.project-meta{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:var(--sp-3) var(--sp-5);
+  font-family:var(--mono);
+  font-size:.82rem;
+}
+.lang{color:var(--ash)}
+.stars{display:inline-flex;align-items:center;gap:.35rem;color:var(--white);font-weight:700}
+/* The count is the value; "stars" is the unit. A glyph and a bare number told
+   the non-technical reader nothing, and the note that once explained it was
+   removed for being jargon, which left the jargon and deleted the gloss. */
+.stars-label{color:var(--ash);font-weight:400}
+.stars[hidden]{display:none}
+.i-star{width:13px;height:13px;color:var(--seam-glow)}
+.project-link{
+  align-self:flex-start;
+  display:inline-flex;
+  align-items:center;
+  gap:.4rem;
+  font-size:.85rem;
+  font-weight:600;
+  color:var(--ash);
+  text-decoration:none;
+  transition:color .18s var(--ease);
+}
+.i-arrow{width:14px;height:14px;transition:transform .18s var(--ease)}
+.project:hover .project-link .i-arrow,
+.project:focus-within .project-link .i-arrow{transform:translateX(3px)}
+
+.projects-foot{
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  gap:var(--sp-4) var(--sp-6);
+  flex-wrap:wrap;
+  margin-top:var(--sp-6);
+  padding-top:var(--sp-5);
+  border-top:1px solid var(--edge);
+}
+/* Inline, not inline-flex: when the label wraps, a flex arrow centres itself
+   against the tallest line and strands at the far right of line one. */
+.archives-link{
+  font-size:.95rem;
+  font-weight:600;
+  color:var(--smoke);
+  text-decoration:none;
+  padding-block:.35rem;
+  transition:color .18s var(--ease);
+}
+.archives-link .i-arrow{
+  display:inline-block;
+  vertical-align:-2px;
+  margin-left:.45rem;
+  color:var(--ash);
+  transition:color .18s var(--ease),transform .18s var(--ease);
+}
+.archives-link:hover .i-arrow{color:var(--seam-glow)}
+.archives-link:hover{color:var(--white)}
+.archives-link:hover .i-arrow{transform:translateX(3px)}
+.projects-note{
+  font-size:.85rem;
+  color:var(--ash);
 }
 
-.path {
-    color: var(--ash)
+@media (max-width:820px){
+  /* minmax(0,1fr), not 1fr: a bare 1fr floors at min-content, so any
+     unwrappable row inside a card pushes the whole grid past the viewport. */
+  .project-grid{grid-template-columns:minmax(0,1fr)}
+  .project--feature{grid-column:span 1}
 }
 
-.typed {
-    color: var(--white)
+/* ---------- Beyond ---------- */
+.beyond-list{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  column-gap:var(--sp-7);
+  row-gap:var(--sp-6);
+}
+.beyond-item{
+  padding-top:var(--sp-4);
+  border-top:1px solid var(--edge);
+}
+.beyond-item h3{font-size:1.02rem;font-weight:700;margin-bottom:var(--sp-2)}
+.beyond-item p{font-size:.95rem;color:var(--ash)}
+
+@media (max-width:700px){
+  .beyond-list{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:640px){
+  .beyond-list{grid-template-columns:1fr}
 }
 
-.cursor {
-    display: inline-block;
-    width: .62em;
-    height: 1.05em;
-    background: var(--seam-glow);
-    transform: translateY(.18em);
-    margin-left: .06em;
-    animation: blink 1.15s steps(1) infinite
+/* ---------- Contact ---------- */
+.contact{padding-block:clamp(3.5rem,8vw,6rem);border-top:1px solid var(--edge)}
+.contact h2{
+  font-size:clamp(1.8rem,4vw,2.6rem);
+  font-weight:800;
+  letter-spacing:-.02em;
+  margin-bottom:var(--sp-4);
 }
-
-@keyframes blink {
-    50% {
-        opacity: 0
-    }
+.contact .lede{margin-bottom:var(--sp-4)}
+/* The two questions a stranger has before emailing: what happens next, and
+   how long until they hear back. One sentence each, no card, no icon row. */
+/* Smoke, not ash: this is the highest-stakes sentence on the surface, and set
+   in muted grey it was dimmer than the reassurance line beneath it. */
+/* Read as one block: what happens, then what it costs and when. Split into
+   two paragraphs so each answers one question, tightened between them so they
+   do not read as unrelated statements. */
+.contact-process,
+.contact-terms{
+  max-width:62ch;
+  font-size:.98rem;
+  color:var(--smoke);
 }
-
-.out {
-    color: var(--ash);
-    display: block;
-    margin-top: 10px;
-    font-size: .92em
+.contact-process{margin-bottom:var(--sp-2)}
+.contact-terms{margin-bottom:var(--sp-3)}
+/* Above the buttons and at body weight, not a footnote under them. The address
+   and the reply time are the only two concrete promises on the page, and the
+   address is the recovery path for a visitor whose mailto: opens nothing;
+   both were previously the smallest, dimmest type in the section. */
+.contact-reply{
+  margin-bottom:var(--sp-6);
+  font-size:1rem;
+  color:var(--smoke);
 }
-
-.out .ok {
-    color: var(--seam-glow)
+/* Deliberately not a link. The button already carries the mailto; this exists
+   for the visitor who has no mail client, so it has to be readable and
+   copyable rather than a second control to the same dead end. user-select:all
+   makes one click or tap grab the whole address. */
+.contact-mail{
+  font-family:var(--mono);
+  color:var(--smoke);
+  user-select:all;
+  -webkit-user-select:all;
 }
-
-.foot {
-    margin-top: 46px;
-    font-size: 13px;
-    color: var(--ash);
-    display: flex;
-    gap: 18px;
-    justify-content: center;
-    flex-wrap: wrap;
-    animation: fade 1s ease .6s both
+/* Script upgrades the span to a click-to-copy button. Affordance is a tint on
+   hover rather than an underline: an underline would read as a link to the
+   same dead end the visible address exists to avoid, and the dashed rule is
+   already spoken for by the stack easter egg. */
+button.contact-mail{
+  border:0;
+  margin:0;
+  padding:.1rem .3rem;
+  margin-inline-start:-.3rem;
+  border-radius:var(--r-sm);
+  background:transparent;
+  font-size:inherit;
+  line-height:inherit;
+  cursor:pointer;
+  transition:background-color .18s var(--ease),color .18s var(--ease);
 }
-
-.foot a {
-    color: var(--smoke);
-    text-decoration: none;
-    border-bottom: 1px solid transparent;
-    transition: color .25s, border-color .25s
+button.contact-mail:hover{background:var(--seam-wash);color:var(--white)}
+.copy-note{
+  margin-inline-start:.5rem;
+  font-family:var(--sans);
+  color:var(--seam-glow);
 }
+.copy-note:empty{margin-inline-start:0}
 
-.foot a:hover {
-    color: var(--seam-glow);
-    border-color: var(--seam-glow)
+/* The rule belongs to the footer, not to its inner column. On .foot-in it
+   inherited the gutter and overhung every other content edge by 72px. */
+.foot{border-top:1px solid var(--edge)}
+.foot-in{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:var(--sp-5);
+  flex-wrap:wrap;
+  padding-block:var(--sp-5);
+  font-size:.85rem;
+  color:var(--ash);
 }
-
-.foot .dot {
-    color: var(--anthracite)
+/* Ash at rest, violet on hover, like every other secondary link. As the only
+   saturated colour in the page's last frame it made a donation ask the visual
+   focal point of the closing viewport, directly after the commercial one. */
+.foot-link{
+  color:var(--ash);
+  text-decoration:none;
+  padding-block:.5rem;
+  transition:color .18s var(--ease);
 }
+.foot-link:hover{color:var(--seam-glow)}
 
-@media(prefers-reduced-motion:reduce) {
-    * {
-        animation: none !important
-    }
+/* ---------- Motion ---------- */
+/* Content is fully visible from first paint; the entrance is a transform-only
+   settle, never an opacity gate, so nothing is blank while it plays. */
+.hero h1,.hero .lede,.hero .cta-row{
+  animation:rise .45s var(--ease) both;
+}
+.hero .lede{animation-delay:.04s}
+.hero .cta-row{animation-delay:.08s}
+@keyframes rise{from{transform:translateY(8px)}to{transform:none}}
 
-    .cursor {
-        animation: none !important
-    }
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none !important;transition:none !important}
+  .project:hover,.project:focus-within{transform:none}
 }
