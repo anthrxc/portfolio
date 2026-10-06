@@ -39,6 +39,9 @@
      seam-glow drops to 4.28:1. */
   --seam-lift:#c9a3e8;
   --seam-wash:rgba(178,127,224,.16);
+  /* The only error colour on the page: a pale red that holds 4.5:1 as text on
+     coal and on anthracite. Used for form validation and nothing else. */
+  --flag:#f4a3a3;
 
   --r-sm:6px;
   --r-md:14px;
@@ -879,64 +882,80 @@ button.lb-btn[disabled]:hover{background:transparent;border-color:var(--edge-str
   letter-spacing:-.02em;
   margin-bottom:var(--sp-4);
 }
-.contact .lede{margin-bottom:var(--sp-4)}
-/* The two questions a stranger has before emailing: what happens next, and
-   how long until they hear back. One sentence each, no card, no icon row. */
-/* Smoke, not ash: this is the highest-stakes sentence on the surface, and set
-   in muted grey it was dimmer than the reassurance line beneath it. */
-/* Read as one block: what happens, then what it costs and when. Split into
-   two paragraphs so each answers one question, tightened between them so they
-   do not read as unrelated statements. */
-.contact-process,
-.contact-terms{
-  max-width:62ch;
-  font-size:.98rem;
+/* Two columns for the short fields, one for the message. Collapses to a single
+   column on phones, where side-by-side inputs would each be too narrow to read
+   what was typed. */
+.contact-form{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:var(--sp-4) var(--sp-5);
+  max-width:44rem;
+}
+.field{display:flex;flex-direction:column;gap:var(--sp-2);min-width:0}
+.field-wide{grid-column:1 / -1}
+.field label{
+  font-size:.92rem;
+  font-weight:600;
   color:var(--smoke);
 }
-.contact-process{margin-bottom:var(--sp-2)}
-.contact-terms{margin-bottom:var(--sp-3)}
-/* Above the buttons and at body weight, not a footnote under them. The address
-   and the reply time are the only two concrete promises on the page, and the
-   address is the recovery path for a visitor whose mailto: opens nothing;
-   both were previously the smallest, dimmest type in the section. */
-.contact-reply{
-  margin-bottom:var(--sp-6);
+/* Surface and ring, like the cards: a raised anthracite field with the
+   interactive-control border (edge-strong clears 1.4.11, edge does not). The
+   global :focus-visible ring is left alone, so focus looks like it does
+   everywhere else on the page. */
+.field input,
+.field textarea{
+  width:100%;
+  box-sizing:border-box;
+  font:inherit;
   font-size:1rem;
-  color:var(--smoke);
-}
-/* Deliberately not a link. The button already carries the mailto; this exists
-   for the visitor who has no mail client, so it has to be readable and
-   copyable rather than a second control to the same dead end. user-select:all
-   makes one click or tap grab the whole address. */
-.contact-mail{
-  font-family:var(--mono);
-  color:var(--smoke);
-  user-select:all;
-  -webkit-user-select:all;
-}
-/* Script upgrades the span to a click-to-copy button. Affordance is a tint on
-   hover rather than an underline: an underline would read as a link to the
-   same dead end the visible address exists to avoid, and the dashed rule is
-   already spoken for by the stack easter egg. */
-button.contact-mail{
-  border:0;
-  margin:0;
-  padding:.1rem .3rem;
-  margin-inline-start:-.3rem;
+  color:var(--white);
+  background:var(--anthracite);
+  border:1px solid var(--edge-strong);
   border-radius:var(--r-sm);
-  background:transparent;
-  font-size:inherit;
-  line-height:inherit;
-  cursor:pointer;
-  transition:background-color .18s var(--ease),color .18s var(--ease);
+  padding:.7rem .85rem;
+  transition:border-color .18s var(--ease),background-color .18s var(--ease);
 }
-button.contact-mail:hover{background:var(--seam-wash);color:var(--white)}
-.copy-note{
-  margin-inline-start:.5rem;
-  font-family:var(--sans);
-  color:var(--seam-glow);
+.field textarea{min-height:9rem;resize:vertical}
+.field input:hover,
+.field textarea:hover{border-color:var(--ash)}
+.field input:focus-visible,
+.field textarea:focus-visible{border-color:var(--seam-glow);outline-offset:1px}
+.field [aria-invalid="true"]{border-color:var(--flag)}
+/* Always in the layout, so a message appearing under one field does not shove
+   the rest of the form down. Colour is never the only signal: the text says
+   what is wrong. */
+.field-error{
+  min-height:1.3em;
+  margin-top:calc(var(--sp-1) * -1);
+  font-size:.88rem;
+  line-height:1.3;
+  color:var(--flag);
 }
-.copy-note:empty{margin-inline-start:0}
+/* Off-screen rather than display:none, which some bots skip. Hidden from
+   assistive tech by aria-hidden on the wrapper. */
+.contact-hp{
+  position:absolute;
+  left:-9999px;
+  width:1px;
+  height:1px;
+  overflow:hidden;
+}
+.form-actions{
+  grid-column:1 / -1;
+  display:flex;
+  align-items:center;
+  gap:var(--sp-4);
+  flex-wrap:wrap;
+}
+button.btn{font-family:var(--sans);cursor:pointer}
+button.btn[disabled]{opacity:.6;cursor:progress}
+.form-status{font-size:.95rem;font-weight:600;color:var(--smoke)}
+.form-status:empty{display:none}
+.form-status[data-ls="good"]{color:var(--seam-lift)}
+.form-status[data-ls="bad"]{color:var(--flag)}
+@media (max-width:640px){
+  .contact-form{grid-template-columns:1fr}
+}
 
 /* The rule belongs to the footer, not to its inner column. On .foot-in it
    inherited the gutter and overhung every other content edge by 72px. */

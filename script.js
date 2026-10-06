@@ -204,72 +204,128 @@
     measure();
   })();
 
-  // ---- Click to copy the contact address ----------------------------------
-  // Built from script rather than shipped as markup, so the no-JS page keeps
-  // plain selectable text instead of a control that cannot work.
-  (function copyEmail(){
-    var el = document.querySelector(".contact-mail");
-    if (!el || el.tagName === "BUTTON") return;
-    var address = el.textContent.trim();
+  // ---- Contact form -------------------------------------------------------
+  // Posts to letterslot, the self-hosted form backend this site is the first
+  // user of. The form works without this script: a plain submit redirects back
+  // to #contact with the outcome in the query string. With it the page never
+  // navigates, and errors land next to the field they belong to.
+  (function contactForm(){
+    var form = document.querySelector("[data-letterslot]");
+    if (!form) return;
 
-    var btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "contact-mail";
-    btn.textContent = address;
-    // The visible address is contained in the accessible name, per SC 2.5.3.
-    btn.setAttribute("aria-label", "Copy email address " + address);
+    var status = form.querySelector("[data-ls-status]");
+    var ts = form.querySelector("[data-ls-ts]");
+    var button = form.querySelector("button[type=submit]");
+    var errorBoxes = form.querySelectorAll("[data-ls-error]");
 
-    var note = document.createElement("span");
-    note.className = "copy-note";
-    note.setAttribute("role", "status");
+    var FIELD_MESSAGES = {
+      required: "This one is required.",
+      too_long: "That is too long.",
+      invalid: "Please check this."
+    };
 
-    el.replaceWith(btn);
-    btn.after(note);
+    function stamp(){ if (ts) ts.value = String(Date.now()); }
 
-    function selectSelf(){
-      var range = document.createRange();
-      range.selectNodeContents(btn);
-      var sel = window.getSelection();
-      sel.removeAllRanges();
-      sel.addRange(range);
+    function topLevel(code, retryAfter){
+      switch (code){
+        case "invalid_request":
+          return "Please fix the highlighted fields.";
+        case "rate_limited":
+          var mins = retryAfter ? Math.ceil(Number(retryAfter) / 60) : 0;
+          return mins
+            ? "Too many messages. Try again in about " + mins + (mins === 1 ? " minute." : " minutes.")
+            : "Too many messages. Try again shortly.";
+        case "delivery_failed":
+          return "That did not go through. Please try again in a minute.";
+        case "payload_too_large":
+          return "That message is too long to send.";
+        case "origin_not_allowed":
+          return "This page is not allowed to send messages.";
+        default:
+          return "Something went wrong. Please try again.";
+      }
     }
 
-    function copy(text){
-      // navigator.clipboard needs a secure context; a plain-http preview on a
-      // LAN or tailnet address is not one, so fall back to the old path.
-      if (navigator.clipboard && window.isSecureContext) {
-        return navigator.clipboard.writeText(text);
-      }
-      return new Promise(function(resolve, reject){
-        var ta = document.createElement("textarea");
-        ta.value = text;
-        ta.setAttribute("readonly", "");
-        ta.style.position = "fixed";
-        ta.style.top = "-1000px";
-        document.body.appendChild(ta);
-        ta.select();
-        var ok = false;
-        try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
-        document.body.removeChild(ta);
-        ok ? resolve() : reject(new Error("copy unavailable"));
+    function setStatus(text, kind){
+      status.textContent = text;
+      if (kind) status.setAttribute("data-ls", kind);
+      else status.removeAttribute("data-ls");
+    }
+
+    function clearErrors(){
+      setStatus("");
+      Array.prototype.forEach.call(errorBoxes, function(box){
+        box.textContent = "";
+        var field = form.elements[box.getAttribute("data-ls-error")];
+        if (field) field.removeAttribute("aria-invalid");
       });
     }
 
-    var clear = null;
-    function say(msg){
-      note.textContent = msg;
-      clearTimeout(clear);
-      clear = setTimeout(function(){ note.textContent = ""; }, 2400);
+    function showFields(fields){
+      var first = null;
+      Object.keys(fields).forEach(function(name){
+        var box = form.querySelector('[data-ls-error="' + name + '"]');
+        var field = form.elements[name];
+        if (box) box.textContent = FIELD_MESSAGES[fields[name]] || FIELD_MESSAGES.invalid;
+        if (field){
+          field.setAttribute("aria-invalid", "true");
+          if (!first) first = field;
+        }
+      });
+      if (first) first.focus();
     }
 
-    btn.addEventListener("click", function(){
-      copy(address).then(function(){
-        say("Copied");
+    stamp();
+
+    // Back from a plain submit: show the outcome, then strip the parameters so
+    // a reload does not replay a stale message.
+    var params = new URLSearchParams(window.location.search);
+    if (params.get("letterslot") === "sent"){
+      setStatus("Thanks, your message is on its way. I reply within a day.", "good");
+    } else if (params.get("letterslot_error")){
+      setStatus(topLevel(params.get("letterslot_error"), params.get("letterslot_retry_after")), "bad");
+      var named = params.get("letterslot_fields");
+      if (named){
+        var fields = {};
+        named.split(",").forEach(function(n){ fields[n] = "invalid"; });
+        showFields(fields);
+      }
+    }
+    var stale = [];
+    params.forEach(function(v, k){ if (k.indexOf("letterslot") === 0) stale.push(k); });
+    if (stale.length){
+      stale.forEach(function(k){ params.delete(k); });
+      var q = params.toString();
+      history.replaceState(null, "", window.location.pathname + (q ? "?" + q : "") + window.location.hash);
+    }
+
+    form.addEventListener("submit", function(event){
+      event.preventDefault();
+      clearErrors();
+      button.disabled = true;
+
+      var body = {};
+      new FormData(form).forEach(function(value, key){ body[key] = value; });
+
+      fetch(form.action, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(body)
+      }).then(function(response){
+        return response.json().catch(function(){ return {}; }).then(function(result){
+          if (response.ok){
+            form.reset();
+            stamp();
+            setStatus("Thanks, your message is on its way. I reply within a day.", "good");
+            return;
+          }
+          setStatus(topLevel(result.error, result.retry_after), "bad");
+          if (result.fields) showFields(result.fields);
+        });
       }).catch(function(){
-        // Nothing was copied, so hand the address over another way rather than
-        // claiming success.
-        selectSelf();
-        say("Press Ctrl+C to copy");
+        setStatus("Could not reach the server. Check your connection and try again.", "bad");
+      }).then(function(){
+        button.disabled = false;
       });
     });
   })();
